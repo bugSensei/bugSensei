@@ -6,7 +6,7 @@
 
 ## .env
 
-'''
+```
 REDDIT_USERNAME = 
 REDDIT_PASSWORD = 
 REDDIT_CLIENT_ID = 
@@ -18,4 +18,4 @@ STACK_EXCHANGE_SECRET_KEY =
 
 MISTRAL_API_KEY = 
 
-'''
+```
