@@ -1,0 +1,6 @@
+selenium
+scrapy
+unsloth
+streamlit
+flask
+python-dotenv
