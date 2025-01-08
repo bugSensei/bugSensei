@@ -1,18 +1,9 @@
-# BugSensei - where sensei teaches you the honorable way among computers.
 import os
 import streamlit as st
 from mistralai import Mistral
-from dotenv import load_dotenv
-
-load_dotenv()
 
 st.set_page_config(page_title="BugSensei", layout="wide")
-
-# initializing the mistral client
-client = Mistral(api_key=os.getenv("MISTRAL_API_KEY"))
-
-
-# Function to get the model response
+client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
 def run_mistral(user_message, model="mistral-large-latest"):
     messages = [{"role": "user", "content": user_message}]
     chat_response = client.chat.complete(model=model, messages=messages)
