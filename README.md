@@ -4,7 +4,7 @@
   <img src="assets/logo.jpeg" alt="Logo" width="200">
 </p>
 
-## .env
+## .env / Secrets
 
 ```
 REDDIT_USERNAME = 
