@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 
 
-class LenovoForums:
+class LenovoForum:
     def __init__(self, output_directory="/content/output/lenovoforum"):
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
@@ -150,3 +150,8 @@ class LenovoForums:
             raise Exception(
                 f"LenovoForum : get_and_process_data() : data extraction failed! Details: {str(e)}"
             )
+        
+### Example Usage ###
+# lenovoforum_retriever = LenovoForum()
+# lenovoforum_retriever.get_and_process_data(urls = []) 
+
