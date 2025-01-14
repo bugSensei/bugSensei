@@ -2,3 +2,5 @@ selenium
 scrapy
 datetime
 snowflake-python-connector
+mistralai
+llama-index
