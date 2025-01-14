@@ -93,6 +93,7 @@ class SummaryAgent:
             transformations=[splitter],
             response_synthesizer=response_synthesizer,
             show_progress=True,
+            summary_query =  "Provide a detailed summary of the document with detailed steps and divisions.",
         )
         return doc_summary_index, file_doc_map
 
