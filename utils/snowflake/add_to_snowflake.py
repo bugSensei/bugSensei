@@ -3,7 +3,7 @@ import os
 #pip install snowflake-python-connector
 import snowflake.connector
 
-def upload_texts_to_snowflake(texts, file_name, table_name, stage_name, snowflake_config):
+def upload_texts_to_snowflake(texts, file_name, table_name, stage_name, snowflake_config, cursor):
     """
     Converts a list of text strings to a text file and uploads it to Snowflake.
 
@@ -12,6 +12,7 @@ def upload_texts_to_snowflake(texts, file_name, table_name, stage_name, snowflak
     :param table_name: Snowflake table name to upload data to.
     :param stage_name: Snowflake stage name to use.
     :param snowflake_config: Dictionary containing Snowflake connection details.
+    :param cursor: Snowflake cursor object. (after establishing snowflake connection using snowflake_config)
     """
     # Step 1: Write texts to a file
     with open(file_name, 'w') as file:

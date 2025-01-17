@@ -16,53 +16,45 @@ def get_snowflake_connection(snowflake_config):
         schema=snowflake_config['schema']
     )
 
-def create_prompt(conn, myquestion, rag):
-    if rag == 1:
-        cmd = """
-        WITH results AS (
-            SELECT RELATIVE_PATH,
-                   VECTOR_COSINE_SIMILARITY(docs_chunks_table.chunk_vec,
-                   SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', ?)) AS similarity,
-                   chunk
-            FROM docs_chunks_table
-            ORDER BY similarity DESC
-            LIMIT ?
-        )
-        SELECT chunk, relative_path FROM results;
-        """
+def create_prompt(conn, myquestion):
+    cmd = """
+    WITH results AS (
+        SELECT RELATIVE_PATH,
+                VECTOR_COSINE_SIMILARITY(docs_chunks_table.chunk_vec,
+                SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', ?)) AS similarity,
+                chunk
+        FROM docs_chunks_table
+        ORDER BY similarity DESC
+        LIMIT ?
+    )
+    SELECT chunk, relative_path FROM results;
+    """
 
-        cursor = conn.cursor()
-        cursor.execute(cmd, (myquestion, num_chunks))
-        df_context = pd.DataFrame(cursor.fetchall(), columns=["chunk", "relative_path"])
+    cursor = conn.cursor()
+    cursor.execute(cmd, (myquestion, num_chunks))
+    df_context = pd.DataFrame(cursor.fetchall(), columns=["chunk", "relative_path"])
 
-        prompt_context = "".join(df_context["chunk"][:-1]).replace("'", "")
-        relative_path = df_context["relative_path"].iloc[0]
+    prompt_context = "".join(df_context["chunk"][:-1]).replace("'", "")
+    relative_path = df_context["relative_path"].iloc[0]
 
-        prompt = f"""
-        You are an expert assistant extracting information from the context provided. 
-        Answer the question based on the context. Be concise and do not hallucinate. 
-        If you don't have the information, just say so.
-        Context: {prompt_context}
-        Question: {myquestion}
-        Answer:
-        """
+    prompt = f"""
+    You are an expert assistant extracting information from the context provided. 
+    Answer the question based on the context. Be concise and do not hallucinate. 
+    If you don't have the information, just say so.
+    Context: {prompt_context}
+    Question: {myquestion}
+    Answer:
+    """
 
-        cmd2 = f"SELECT GET_PRESIGNED_URL(@docs, '{relative_path}', 360) AS URL_LINK FROM directory(@docs);"
-        cursor.execute(cmd2)
-        df_url_link = pd.DataFrame(cursor.fetchall(), columns=["URL_LINK"])
-        url_link = df_url_link["URL_LINK"].iloc[0]
-    else:
-        prompt = f"""
-        Question: {myquestion}
-        Answer:
-        """
-        url_link = "None"
-        relative_path = "None"
+    cmd2 = f"SELECT GET_PRESIGNED_URL(@docs, '{relative_path}', 360) AS URL_LINK FROM directory(@docs);"
+    cursor.execute(cmd2)
+    df_url_link = pd.DataFrame(cursor.fetchall(), columns=["URL_LINK"])
+    url_link = df_url_link["URL_LINK"].iloc[0]
 
     return prompt, url_link, relative_path
 
-def complete(conn, myquestion, model_name, rag=1):
-    prompt, url_link, relative_path = create_prompt(conn, myquestion, rag)
+def complete(conn, myquestion, model_name='mistral-large'):
+    prompt, url_link, relative_path = create_prompt(conn, myquestion)
     cmd = "SELECT SNOWFLAKE.CORTEX.COMPLETE(?, ?) AS RESPONSE;"
 
     cursor = conn.cursor()
@@ -71,8 +63,8 @@ def complete(conn, myquestion, model_name, rag=1):
 
     return response, url_link, relative_path
 
-def display_response(conn, question, model, rag=0):
-    response, url_link, relative_path = complete(conn, question, model, rag)
+def display_response(conn, question, model='mistral-7b'):
+    response, url_link, relative_path = complete(conn, question, model)
     st.markdown(response)
     if rag == 1:
         display_url = f"Link to [{relative_path}]({url_link}) that may be useful"
