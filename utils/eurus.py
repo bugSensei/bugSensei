@@ -11,7 +11,7 @@ import os
 import json
 import re
 import concurrent.futures
-from dotenv import load_dotenv 
+from dotenv import load_dotenv
 
 
 from selenium.webdriver.common.by import By
@@ -27,8 +27,11 @@ from utils import TomsForumRunner
 from utils import MicrosoftForum
 from utils import AmdCommunity
 from utils import LenovoForum
+from tavily import TavilyClient
 
 load_dotenv()
+
+
 # The entire web retreival pipeline is handled via the Eurus Object.
 # extracts relevant search results based on the query and enlists bots based on demand.
 class Eurus:
@@ -97,6 +100,13 @@ class Eurus:
 
         print(f"Search Results Dumped to {full_file_path}")
         return result
+
+    def getTavily(self, query):
+        tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+        response = tavily_client.search(query, max_results=10)
+        with open("gsearch.json", "w") as f:
+            json.dump(response["results"], f, indent=3)
+        return response["results"]
 
     # direct method to extract the search results and dump it onto a json file
     def get_search_results(self, search_query):
@@ -235,12 +245,16 @@ class Eurus:
 
     def get_extracted_results(self, search_query):
         try:
-            search_results = self.get_search_results(search_query)
+            try:
+                search_results = self.get_search_results(search_query)
+            except Exception as e:
+                print("get_search_results failed, switching to getTavily:", e)
+                search_results = self.getTavily(search_query)
             mapped_urls = self.get_mapped_urls(search_results)
             self.generate_and_run_entities(mapped_urls)
-            print("Relevant data retriever and dumped into respective folders")
+            print("Relevant data retrieved and dumped into respective folders")
         except Exception as e:
-            raise Exception("Eurus : get_extracted_results() : extraction failed !")
+            raise Exception("Eurus : get_extracted_results() : extraction failed!")
             print(e)
 
     def __del__(self):

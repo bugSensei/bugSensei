@@ -101,7 +101,7 @@ class SummaryAgent:
 ### Example Usage ###
 # agent = SummaryAgent(api_key = "") - Enter your Mistral API Key
 # index,map = agent.generate_summaries(input_dir = "") - Enter your input directory
-# print(index.get_document_summary(map[1][0]))
+# print(index.get_document_summary(map[1][0])) - this is an example, you can iterate over map to get all generated_summaries.
 
 ### Note ###
 ## walks over the directory and reads only the text files,
