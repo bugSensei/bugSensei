@@ -126,7 +126,6 @@ class Snowflake:
         :param model_name: The name of the LLM to use, default is 'mistral-large'
         '''
 
-
         prompt, relative_path = self.create_prompt(myquestion)
         cmd = "SELECT SNOWFLAKE.CORTEX.COMPLETE(?, ?) AS RESPONSE;"
 
@@ -134,6 +133,18 @@ class Snowflake:
         response = self.cursor.fetchone()[0]
 
         return response
+    
+    def summarise(self, text):
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.SUMMARIZE(
+                $$ {text} $$
+            ) AS SUMMARY;
+        """
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0]
+        except Exception as e:
+            return f"Error: {e}"
     
 
 if __name__ == "__main__":
