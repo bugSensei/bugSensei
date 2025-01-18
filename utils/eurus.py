@@ -11,6 +11,7 @@ import os
 import json
 import re
 import concurrent.futures
+import streamlit as st
 from dotenv import load_dotenv
 
 
@@ -37,72 +38,72 @@ load_dotenv()
 class Eurus:
     def __init__(self, output_directory="./output/"):
         ## Driver Options - for linux based subsystems
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument("--headless")
-        self.options.add_argument("--disable-gpu")
-        self.options.add_argument("--diable-dve-shm-uage")
-        self.driver = webdriver.Chrome(options=self.options)
+        # self.options = webdriver.ChromeOptions()
+        # self.options.add_argument("--no-sandbox")
+        # self.options.add_argument("--headless")
+        # self.options.add_argument("--disable-gpu")
+        # self.options.add_argument("--diable-dve-shm-uage")
+        # self.driver = webdriver.Chrome(options=self.options)
 
-        self.output_directory = output_directory
+        # self.output_directory = output_directory
 
         ## this is where element of the "search" class is going to be stored
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
 
     # automates google search using selenium
-    def google_search(self, search_query):
-        self.driver.get("https://google.com")
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "gLFyf"))
-        )
-        search_class = self.driver.find_element(By.CLASS_NAME, "gLFyf")
-        search_class.clear()
-        search_class.send_keys(search_query + Keys.ENTER)
-        search_class = self.driver.find_element(By.ID, "search")
-        return search_class
+    # def google_search(self, search_query):
+    #     self.driver.get("https://google.com")
+    #     WebDriverWait(self.driver, 10).until(
+    #         EC.presence_of_element_located((By.CLASS_NAME, "gLFyf"))
+    #     )
+    #     search_class = self.driver.find_element(By.CLASS_NAME, "gLFyf")
+    #     search_class.clear()
+    #     search_class.send_keys(search_query + Keys.ENTER)
+    #     search_class = self.driver.find_element(By.ID, "search")
+    #     return search_class
 
-    def extract_elements(self, search_class):
-        xpath_query = ".//div[@class='ULSxyf']//div[@class='MjjYud'] | .//div[@class='MjjYud'] | .//div[@class='hlcw0c']//div[@class='MjjYud']"
-        elements = search_class.find_elements(By.XPATH, xpath_query)
-        return elements
+    # def extract_elements(self, search_class):
+    #     xpath_query = ".//div[@class='ULSxyf']//div[@class='MjjYud'] | .//div[@class='MjjYud'] | .//div[@class='hlcw0c']//div[@class='MjjYud']"
+    #     elements = search_class.find_elements(By.XPATH, xpath_query)
+    #     return elements
 
-    # extracts headers and links and formats them into a dictionary
-    def extract_headers_and_links(self, elements, file_name="gsearch.json"):
-        result = []
-        full_file_path = self.output_directory + file_name
+    # # extracts headers and links and formats them into a dictionary
+    # def extract_headers_and_links(self, elements, file_name="gsearch.json"):
+    #     result = []
+    #     full_file_path = self.output_directory + file_name
 
-        for element in elements:
-            element_data = {}
+    #     for element in elements:
+    #         element_data = {}
 
-            try:
-                element_data["snippet"] = element.text
-            except Exception:
-                element_data["snippet"] = None
+    #         try:
+    #             element_data["snippet"] = element.text
+    #         except Exception:
+    #             element_data["snippet"] = None
 
-            try:
-                h3_tag = element.find_element(By.XPATH, ".//h3")
-                element_data["header"] = h3_tag.text
-            except Exception:
-                element_data["header"] = None
+    #         try:
+    #             h3_tag = element.find_element(By.XPATH, ".//h3")
+    #             element_data["header"] = h3_tag.text
+    #         except Exception:
+    #             element_data["header"] = None
 
-            try:
-                a_tag = element.find_element(By.XPATH, ".//a")
-                element_data["url"] = a_tag.get_attribute("href")
-            except Exception:
-                element_data["url"] = None
+    #         try:
+    #             a_tag = element.find_element(By.XPATH, ".//a")
+    #             element_data["url"] = a_tag.get_attribute("href")
+    #         except Exception:
+    #             element_data["url"] = None
 
-            if element_data["header"] and element_data["header"]:
-                result.append(element_data)
+    #         if element_data["header"] and element_data["header"]:
+    #             result.append(element_data)
 
-        with open(full_file_path, "w", encoding="utf-8") as f:
-            json.dump(result, f, ensure_ascii=False, indent=4)
+    #     with open(full_file_path, "w", encoding="utf-8") as f:
+    #         json.dump(result, f, ensure_ascii=False, indent=4)
 
-        print(f"Search Results Dumped to {full_file_path}")
-        return result
+    #     print(f"Search Results Dumped to {full_file_path}")
+    #     return result
 
     def getTavily(self, query):
-        tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
+        tavily_client = TavilyClient(api_key=st.secrets['TAVILY_API_KEY'])
         response = tavily_client.search(query, max_results=10)
         with open("gsearch.json", "w") as f:
             json.dump(response["results"], f, indent=3)
@@ -178,15 +179,15 @@ class Eurus:
             # assign retriever objects based on the availability of the urls in mapped_urls
             if len(mapped_urls.get("stackexchange", [])) != 0:
                 stackexchange_retriever = StackExchangeRetriever(
-                    access_token=os.getenv("STACK_EXCHANGE_ACCESS_TOKEN"),
-                    secret_key=os.getenv("STACK_EXCHANGE_SECRET_KEY"),
+                    access_token=st.secrets["STACK_EXCHANGE_ACCESS_TOKEN"],
+                    secret_key=st.secrets["STACK_EXCHANGE_SECRET_KEY"],
                 )
             if len(mapped_urls.get("reddit", [])) != 0:
                 reddit_retriever = RedditRetriever(
-                    username=os.getenv("REDDIT_USERNAME"),
-                    secret_key=os.getenv("REDDIT_SECRET_KEY"),
-                    password=os.getenv("REDDIT_PASSWORD"),
-                    client_id=os.getenv("REDDIT_CLIENT_ID"),
+                    username=st.secrets["REDDIT_USERNAME"],
+                    secret_key=st.secrets["REDDIT_SECRET_KEY"],
+                    password=st.secrets["REDDIT_PASSWORD"],
+                    client_id=st.secrets["REDDIT_CLIENT_ID"],
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
                 tomsforum_retriever = TomsForumRunner()
@@ -246,10 +247,10 @@ class Eurus:
     def get_extracted_results(self, search_query):
         try:
             try:
-                search_results = self.get_search_results(search_query)
+                # search_results = self.get_search_results(search_query)
+                search_results = self.getTavily(search_query)
             except Exception as e:
                 print("get_search_results failed, switching to getTavily:", e)
-                search_results = self.getTavily(search_query)
             mapped_urls = self.get_mapped_urls(search_results)
             self.generate_and_run_entities(mapped_urls)
             print("Relevant data retrieved and dumped into respective folders")
