@@ -4,6 +4,12 @@
   <img src="assets/logo.jpeg" alt="Logo" width="200">
 </p>
 
+## Architecture Overview
+
+<p align="center">
+  <img src="assets/architecture.jpg" alt="Logo" width="200">
+</p>
+
 ## .env / Secrets
 
 ```
