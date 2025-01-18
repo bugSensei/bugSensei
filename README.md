@@ -4,7 +4,7 @@
   <img src="assets/logo.jpeg" alt="Logo" width="200">
 </p>
 
-## Architecture Overview
+## Architecture
 
 ![alt text](assets/architecture.jpg)
 
