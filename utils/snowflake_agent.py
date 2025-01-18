@@ -34,7 +34,7 @@ class Snowflake:
         self.cursor.close()
         self.conn.close()
 
-    def upload_texts_to_snowflake(self, texts, table_name, stage_name):
+    def upload_texts_to_snowflake(self, texts, table_name="", stage_name=""):
         """
         Converts a list of text strings to a temporary text file and uploads it to Snowflake.
 
@@ -136,7 +136,7 @@ class Snowflake:
 
         return response
     
-    def summarise(self, text,input_dir="/content/output/"):
+    def summarise(self, input_dir="/content/output/"):
         summarize_folder = input_dir+"summarize"
         os.makedirs(summarize_folder, exist_ok=True)
         tot = []

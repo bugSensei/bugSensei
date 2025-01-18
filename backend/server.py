@@ -5,21 +5,28 @@ from utils import Snowflake
 
 from utils import eurus
 # unsummarized files under /content/output/summarize -- refer utils/snowflake_agent.py
-def web_search(search_query):
+def web_search(snowflake, search_query):
     try:
         wt = eurus.Eurus()
         wt.get_extracted_results(search_query)   
     except Exception as e:
         print("Web Extraction Failed !",e)
 
+    snowflake.summarise()
+
 def snowflake_retrieval(snowflake, search_query):
     snowflake.get_answer_from_rag(search_query)
     return snowflake.get_answer_from_rag(search_query)
 
-
 def query_refiner(snowflake, search_query):
     refined_query = snowflake.query_refiner(search_query)
     return refined_query
+
+def upload_file_to_snowflake(snowflake, file_path):
+    with open(os.path(file_path), 'r') as f:
+        text = f.read()
+
+    snowflake.upload_texts_to_snowflake([text])
 
 snowflake = Snowflake()
 
