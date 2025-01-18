@@ -3,16 +3,17 @@ import tempfile
 import pandas as pd
 import os
 import shutil
+import streamlit as st
 
 class Snowflake:
     def __init__(self, num_chunks=3):
         snowflake_config = {
-            'user': 'YOUR_USERNAME',
-            'password': 'YOUR_PASSWORD',
-            'account': 'YOUR_ACCOUNT',
-            'warehouse': 'YOUR_WAREHOUSE',
-            'database': 'YOUR_DATABASE',
-            'schema': 'YOUR_SCHEMA'
+            'user': st.secrets["SNOWFLAKE_USER"],
+            'password': st.secrets["SNOWFLAKE_PASSWORD"],
+            'account': st.secrets["SNOWFLAKE_ACCOUNT"],
+            'warehouse': st.secrets["SNOWFLAKE_WAREHOUSE"],
+            'database': st.secrets["SNOWFLAKE_DATABASE"],
+            'schema': st.secrets["SNOWFLAKE_SCHEMA"]
         }
 
         conn = snowflake.connector.connect(
