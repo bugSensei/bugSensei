@@ -34,7 +34,7 @@ class Snowflake:
         self.cursor.close()
         self.conn.close()
 
-    def upload_texts_to_snowflake(self, texts, table_name, stage_name):
+    def upload_texts_to_snowflake(self, texts, table_name="", stage_name=""):
         """
         Converts a list of text strings to a temporary text file and uploads it to Snowflake.
 
@@ -136,7 +136,7 @@ class Snowflake:
 
         return response
     
-    def summarise(self, text,input_dir="/content/output/"):
+    def summarise(self, input_dir="/content/output/"):
         summarize_folder = input_dir+"summarize"
         os.makedirs(summarize_folder, exist_ok=True)
         tot = []
@@ -166,6 +166,26 @@ class Snowflake:
             SELECT SNOWFLAKE.CORTEX.SUMMARIZE(
                 $$ {text} $$
             ) AS SUMMARY;
+        """
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0]
+        except Exception as e:
+            return f"Error: {e}"
+        
+    def query_refiner(self, search_query):
+        prompt = f"""
+            Given the following user query, refine it to make it more specific, clear, and actionable, ensuring it avoids ambiguity and aligns with the user's likely intent. Provide the refined query in less than 25 words below:
+
+            Original Query: {search_query}
+
+            Refined Query:
+        """
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.COMPLETE(
+                'mistral-large',
+                $$ {prompt} $$
+            ) AS REFINED_QUERY;
         """
         try:
             self.cursor.execute(query)
