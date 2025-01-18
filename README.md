@@ -6,9 +6,7 @@
 
 ## Architecture Overview
 
-<p align="center">
-  <img src="assets/architecture.jpg" alt="Logo" width="200">
-</p>
+![alt text](assets/architecture.jpg)
 
 ## .env / Secrets
 
