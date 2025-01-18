@@ -19,15 +19,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
+from tavily import TavilyClient
 
 # importing from utils
-from utils import RedditRetriever
-from utils import StackExchangeRetriever
-from utils import TomsForumRunner
-from utils import MicrosoftForum
-from utils import AmdCommunity
-from utils import LenovoForum
-from tavily import TavilyClient
+from utils.bots import RedditRetriever
+from utils.bots import StackExchangeRetriever
+from utils.bots import TomsForumRunner
+from utils.bots import MicrosoftForum
+from utils.bots import AmdCommunity
+from utils.bots import LenovoForum
 
 load_dotenv()
 

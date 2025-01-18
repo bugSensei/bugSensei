@@ -152,6 +152,15 @@ class Snowflake:
 
         # all the unsummarized-text files are under /content/output/summarize/
 
+        for file in os.listdir(summarize_folder):
+            with open(os.path.join(summarize_folder, file), 'r') as f:
+                text = f.read()
+                summary = self.summarize_text(text)
+                with open(os.path.join(summarize_folder, file), 'w') as f:
+                    f.write(summary)
+
+    
+    def summarize_text(self, text):
         query = f"""
             SELECT SNOWFLAKE.CORTEX.SUMMARIZE(
                 $$ {text} $$
@@ -162,7 +171,6 @@ class Snowflake:
             return self.cursor.fetchone()[0]
         except Exception as e:
             return f"Error: {e}"
-    
 
 if __name__ == "__main__":
     snowflake = Snowflake()
