@@ -1,7 +1,7 @@
 import os
 import json
 import streamlit as st
-from utils import Snowflake
+from utils.snowflake_agent import Snowflake
 
 from utils import eurus
 # unsummarized files under /content/output/summarize -- refer utils/snowflake_agent.py
@@ -32,16 +32,10 @@ def upload_files_to_snowflake(snowflake, dir_path):
     snowflake.upload_texts_to_snowflake(texts)
 
 
-def rank_documents():
-    top3 = []
+def rank_documents(snowflake, query):
+    return snowflake.rerank_documents(query)
 
 
-    return top3
+if __name__ == "__main__":
+    snowflake = Snowflake()
 
-snowflake = Snowflake()
-
-#snowflake retrieval
-
-#decision agent
-
-#upload to snowflake 

@@ -159,7 +159,6 @@ class Snowflake:
                 summary = self.summarize_text(text)
                 with open(os.path.join(summarize_folder, file), 'w') as f:
                     f.write(summary)
-
     
     def summarize_text(self, text):
         query = f"""
@@ -193,6 +192,46 @@ class Snowflake:
         except Exception as e:
             return f"Error: {e}"
 
-if __name__ == "__main__":
-    snowflake = Snowflake()
-    #initialise the web bots
+    def rerank_documents(self, search_query, top_k=3, file_dir='/content/output/summarize/'):
+        self.cursor.execute("""
+            CREATE OR REPLACE TEMPORARY TABLE temp_text_files (
+                id INT AUTO_INCREMENT,
+                content TEXT
+            );
+        """)
+        print("Temporary table created.")
+
+        for file in os.listdir(file_dir):
+            with open(os.path.join(file_dir, file), 'r') as f:
+                text = f.read()
+                self.cursor.execute("INSERT INTO temp_text_files (content) VALUES (%s);", (text,))
+        print("Text files inserted into temporary table.")
+
+        query_ranking = f"""
+            WITH query_embedding AS (
+                SELECT SNOWFLAKE.CORTEX.EMBED_TEXT('{search_query}') AS embedding
+            )
+            SELECT 
+                id,
+                content,
+                SNOWFLAKE.CORTEX.SIMILARITY(
+                    query_embedding.embedding, 
+                    SNOWFLAKE.CORTEX.EMBED_TEXT(content)
+                ) AS similarity_score
+            FROM temp_text_files, query_embedding
+            ORDER BY similarity_score DESC;
+        """
+
+        self.cursor.execute(query_ranking)
+        ranked_results = self.cursor.fetchmany(top_k)
+
+        self.cursor.execute("DROP TABLE IF EXISTS temp_text_files;")
+        print("Temporary table dropped.")
+
+        return ranked_results
+
+
+# example usage
+# if __name__ == "__main__":
+#     snowflake = Snowflake()
+#     #initialise the web bots
