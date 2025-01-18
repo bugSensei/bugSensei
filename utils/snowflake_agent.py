@@ -2,6 +2,7 @@ import snowflake.connector
 import tempfile
 import pandas as pd
 import os
+import shutil
 
 class Snowflake:
     def __init__(self, num_chunks=3):
@@ -134,7 +135,23 @@ class Snowflake:
 
         return response
     
-    def summarise(self, text):
+    def summarise(self, text,input_dir="/content/output/"):
+        summarize_folder = input_dir+"summarize"
+        os.makedirs(summarize_folder, exist_ok=True)
+        tot = []
+        for i in os.walk(input_dir):
+            if i[2]:
+                for file in i[2]:
+                    if file.endswith(".txt"):
+                        full_file_path = os.path.join(i[0], file)
+                        doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
+                        new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
+                        shutil.move(full_file_path, new_file_path)
+                        doc_map = (doc_id, new_file_path)
+                        tot.append(doc_map)
+
+        # all the unsummarized-text files are under /content/output/summarize/
+
         query = f"""
             SELECT SNOWFLAKE.CORTEX.SUMMARIZE(
                 $$ {text} $$
