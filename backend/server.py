@@ -22,11 +22,21 @@ def query_refiner(snowflake, search_query):
     refined_query = snowflake.query_refiner(search_query)
     return refined_query
 
-def upload_file_to_snowflake(snowflake, file_path):
-    with open(os.path(file_path), 'r') as f:
-        text = f.read()
+def upload_files_to_snowflake(snowflake, dir_path):
+    texts = []
+    for file in os.listdir(dir_path):
+        with open(os.path.join(dir_path, file), 'r') as f:
+            text = f.read()
+            texts.append(text)
+            
+    snowflake.upload_texts_to_snowflake(texts)
 
-    snowflake.upload_texts_to_snowflake([text])
+
+def rank_documents():
+    top3 = []
+
+
+    return top3
 
 snowflake = Snowflake()
 
