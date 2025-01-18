@@ -172,6 +172,26 @@ class Snowflake:
             return self.cursor.fetchone()[0]
         except Exception as e:
             return f"Error: {e}"
+        
+    def query_refiner(self, search_query):
+        prompt = f"""
+            Given the following user query, refine it to make it more specific, clear, and actionable, ensuring it avoids ambiguity and aligns with the user's likely intent. Provide the refined query in less than 25 words below:
+
+            Original Query: {search_query}
+
+            Refined Query:
+        """
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.COMPLETE(
+                'mistral-large',
+                $$ {prompt} $$
+            ) AS REFINED_QUERY;
+        """
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0]
+        except Exception as e:
+            return f"Error: {e}"
 
 if __name__ == "__main__":
     snowflake = Snowflake()
