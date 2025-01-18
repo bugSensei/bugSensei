@@ -193,42 +193,51 @@ class Snowflake:
             return f"Error: {e}"
 
     def rerank_documents(self, search_query, top_k=3, file_dir='/content/output/summarize/'):
-        self.cursor.execute("""
-            CREATE OR REPLACE TEMPORARY TABLE temp_text_files (
-                id INT AUTO_INCREMENT,
-                content TEXT
-            );
-        """)
-        print("Temporary table created.")
+        try:
+            self.cursor.execute("""
+                CREATE OR REPLACE TEMPORARY TABLE temp_text_files (
+                    id INT,
+                    content VARCHAR
+                );
+            """)
+            print("Temporary table created.")
 
-        for file in os.listdir(file_dir):
-            with open(os.path.join(file_dir, file), 'r') as f:
-                text = f.read()
-                self.cursor.execute("INSERT INTO temp_text_files (content) VALUES (%s);", (text,))
-        print("Text files inserted into temporary table.")
+            text_files = [f for f in os.listdir(file_dir)]
+            print(len(text_files))
+            for idx, file in enumerate(text_files, start=1):
+                file_path = os.path.join(file_dir, file)
+                with open(file_path, 'r') as f:
+                    text = f.read()
+                    self.cursor.execute("INSERT INTO temp_text_files (id, content) VALUES (%s, %s);", (idx, text))
+            print(f"{len(text_files)} text files inserted into the temporary table.")
 
-        query_ranking = f"""
-            WITH query_embedding AS (
-                SELECT SNOWFLAKE.CORTEX.EMBED_TEXT('{search_query}') AS embedding
-            )
-            SELECT 
-                id,
-                content,
-                SNOWFLAKE.CORTEX.SIMILARITY(
-                    query_embedding.embedding, 
-                    SNOWFLAKE.CORTEX.EMBED_TEXT(content)
-                ) AS similarity_score
-            FROM temp_text_files, query_embedding
-            ORDER BY similarity_score DESC;
-        """
+            query_ranking = """
+                WITH query_embedding AS (
+                    SELECT SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', %s) AS embedding
+                )
+                SELECT 
+                    id,
+                    content,
+                    VECTOR_COSINE_SIMILARITY(
+                        query_embedding.embedding, 
+                        SNOWFLAKE.CORTEX.EMBED_TEXT_768('e5-base-v2', content)
+                    ) AS similarity_score
+                FROM temp_text_files, query_embedding
+                ORDER BY similarity_score DESC
+                LIMIT %s;
+            """
 
-        self.cursor.execute(query_ranking)
-        ranked_results = self.cursor.fetchmany(top_k)
-
-        self.cursor.execute("DROP TABLE IF EXISTS temp_text_files;")
-        print("Temporary table dropped.")
-
-        return ranked_results
+            self.cursor.execute(query_ranking, (search_query, top_k))
+            ranked_results = self.cursor.fetchall()
+            return ranked_results
+        
+        except Exception as e:
+            print(f"Error: {e}")
+            raise
+        
+        finally:
+            self.cursor.execute("DROP TABLE IF EXISTS temp_text_files;")
+            print("Temporary table dropped.")
 
 
 # example usage
