@@ -12,6 +12,7 @@ import json
 import re
 import concurrent.futures
 import streamlit as st
+
 # from dotenv import load_dotenv
 
 
@@ -103,7 +104,7 @@ class Eurus:
     #     return result
 
     def getTavily(self, query):
-        tavily_client = TavilyClient(api_key=st.secrets['TAVILY_API_KEY'])
+        tavily_client = TavilyClient(api_key=st.secrets["TAVILY_API_KEY"])
         response = tavily_client.search(query, max_results=10)
         with open("./output/gsearch.json", "w") as f:
             json.dump(response["results"], f, indent=3)
@@ -199,50 +200,32 @@ class Eurus:
                 lenovoforum_retriever = LenovoForum()
 
             # a list containing all the functions to be executed concurrently
-            tasks = []
+            # tasks = []
 
             if stackexchange_retriever:
-                tasks.append(
-                    lambda: stackexchange_retriever.get_and_process_data(
-                        mapped_urls["stackexchange"]
-                    )
+                stackexchange_retriever.get_and_process_data(
+                    mapped_urls["stackexchange"]
                 )
             if reddit_retriever:
-                tasks.append(
-                    lambda: reddit_retriever.get_and_process_data(mapped_urls["reddit"])
-                )
+                reddit_retriever.get_and_process_data(mapped_urls["reddit"])
             if tomsforum_retriever:
-                tasks.append(
-                    lambda: tomsforum_retriever.get_and_process_data(
-                        mapped_urls["tomsforum"]
-                    )
-                )
+                tomsforum_retriever.get_and_process_data(mapped_urls["tomsforum"])
             if answers_microsoft_retriever:
-                tasks.append(
-                    lambda: answers_microsoft_retriever.get_and_process_data_multiple(
-                        mapped_urls["answers_microsoft"]
-                    )
+                answers_microsoft_retriever.get_and_process_data_multiple(
+                    mapped_urls["answers_microsoft"]
                 )
             if amdforum_retriever:
-                tasks.append(
-                    lambda: amdforum_retriever.get_and_process_data(
-                        mapped_urls["amdforum"]
-                    )
-                )
+                amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
             if lenovoforum_retriever:
-                tasks.append(
-                    lambda: lenovoforum_retriever.get_and_process_data(
-                        mapped_urls["lenovoforum"]
-                    )
-                )
+                lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
 
-            # running all retrieval processes simulataneously
-            try:
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    results = executor.map(lambda f: f(), tasks)
-            except Exception as e:
-                raise Exception("Eurus : generate_entities() : retrieval failed !")
-                print(e)
+            # # running all retrieval processes simulataneously
+            # try:
+            #     with concurrent.futures.ThreadPoolExecutor() as executor:
+            #         results = executor.map(lambda f: f(), tasks)
+            # except Exception as e:
+            #     raise Exception("Eurus : generate_entities() : retrieval failed !")
+            #     print(e)
 
     def get_extracted_results(self, search_query):
         try:
