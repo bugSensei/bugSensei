@@ -23,12 +23,12 @@ from selenium import webdriver
 from tavily import TavilyClient
 
 # importing from utils
-from utils.bots import RedditRetriever
-from utils.bots import StackExchangeRetriever
-from utils.bots import TomsForumRunner
-from utils.bots import MicrosoftForum
-from utils.bots import AmdCommunity
-from utils.bots import LenovoForum
+from utils.bots.reddit import RedditRetriever
+from utils.bots.stackexchange import StackExchangeRetriever
+from utils.bots.tomsforum import TomsForumRunner
+from utils.bots.microsoft_forum import MicrosoftForum
+from utils.bots.amd_community import AmdCommunity
+from utils.bots.lenovoforums import LenovoForum
 
 # load_dotenv()
 

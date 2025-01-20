@@ -4,7 +4,7 @@ from mistralai import Mistral
 import sys
 import json
 
-from utils import Eurus
+from utils.eurus import Eurus
 
 
 sys.path.append('.') # necessary for importing files
