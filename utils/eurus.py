@@ -12,7 +12,7 @@ import json
 import re
 import concurrent.futures
 import streamlit as st
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 
 from selenium.webdriver.common.by import By
@@ -30,7 +30,7 @@ from utils.bots import MicrosoftForum
 from utils.bots import AmdCommunity
 from utils.bots import LenovoForum
 
-load_dotenv()
+# load_dotenv()
 
 
 # The entire web retreival pipeline is handled via the Eurus Object.
