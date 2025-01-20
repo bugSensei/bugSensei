@@ -188,6 +188,7 @@ class Eurus:
                     username=st.secrets["REDDIT_USERNAME"],
                     password=st.secrets["REDDIT_PASSWORD"],
                     secret_key=st.secrets["REDDIT_SECRET_KEY"],
+
                     client_id=st.secrets["REDDIT_CLIENT_ID"]
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
@@ -201,23 +202,40 @@ class Eurus:
 
             # a list containing all the functions to be executed concurrently
             # tasks = []
-
-            if stackexchange_retriever:
-                stackexchange_retriever.get_and_process_data(
-                    mapped_urls["stackexchange"]
-                )
-            if reddit_retriever:
-                reddit_retriever.get_and_process_data(mapped_urls["reddit"])
-            if tomsforum_retriever:
-                tomsforum_retriever.get_and_process_data(mapped_urls["tomsforum"])
-            if answers_microsoft_retriever:
-                answers_microsoft_retriever.get_and_process_data_multiple(
-                    mapped_urls["answers_microsoft"]
-                )
-            if amdforum_retriever:
-                amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
-            if lenovoforum_retriever:
-                lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
+            try:
+                if stackexchange_retriever:
+                    stackexchange_retriever.get_and_process_data(
+                        mapped_urls["stackexchange"]
+                    )
+            except Exception as e:
+                print("StackExchange Failed to retrieve Data")
+            try:
+                if reddit_retriever:
+                    reddit_retriever.get_and_process_data(mapped_urls["reddit"])
+            except Exception as e:
+                print("Reddit Failed to retrieve data")
+            try:
+                if tomsforum_retriever:
+                    tomsforum_retriever.get_and_process_data(mapped_urls["tomsforum"])
+            except Exception as e:
+                print("Tom's Hardware Failed to extract data")
+            try:
+                if answers_microsoft_retriever:
+                    answers_microsoft_retriever.get_and_process_data_multiple(
+                        mapped_urls["answers_microsoft"]
+                    )
+            except Exception as e:
+                print("Microsoft Community Failed to Extract Data")
+            try:
+                if amdforum_retriever:
+                    amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
+            except Exception as e:
+                print("Amd Forum failed to extract data")
+            try:
+                if lenovoforum_retriever:
+                    lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
+            except Exception as e:
+                print("LenovoForums failed to extract data!")
 
             # # running all retrieval processes simulataneously
             # try:
