@@ -14,7 +14,7 @@ class StackExchangeRetriever:
         self.headers = {'Authorization': f'Bearer {self.access_token}', 'Accept': 'application/json'}
         self.payload_endpoints = ["", "answers", "comments"]
 
-        self.output_directory = "/content/output/stackexchange"
+        self.output_directory = "./content/output/stackexchange"
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
     # gets the formatted urls with self.base_url as the prefix and also the updated endpoints based on the self.payload_endpoints

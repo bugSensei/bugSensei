@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 
 class AmdCommunity:
-  def __init__(self,output_directory="/content/output/amdcommunity/"):
+  def __init__(self,output_directory="./content/output/amdcommunity/"):
     options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')
     options.add_argument('--headless')

@@ -21,7 +21,7 @@ class RedditRetriever:
             self.client_id = client_id
             self.client_secret = secret_key
 
-            self.output_directory = "/content/output/reddit/"
+            self.output_directory = "./content/output/reddit/"
 
             # checking whether the specified directory exists
             if not os.path.exists(self.output_directory):

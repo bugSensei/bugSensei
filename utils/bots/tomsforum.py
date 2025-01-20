@@ -14,7 +14,7 @@ class TomsForum(scrapy.Spider):
         self,
         file_index,
         start_url,
-        output_directory="/content/output/tomsforum/",
+        output_directory="./content/output/tomsforum/",
         *args,
         **kwargs,
     ):

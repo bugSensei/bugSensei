@@ -9,7 +9,7 @@ from selenium import webdriver
 
 
 class LenovoForum:
-    def __init__(self, output_directory="/content/output/lenovoforum"):
+    def __init__(self, output_directory="./content/output/lenovoforum"):
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--headless")
