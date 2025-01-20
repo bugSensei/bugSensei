@@ -186,8 +186,8 @@ class Eurus:
             if len(mapped_urls.get("reddit", [])) != 0:
                 reddit_retriever = RedditRetriever(
                     username=st.secrets["REDDIT_USERNAME"],
-                    secret_key=st.secrets["REDDIT_SECRET_KEY"],
                     password=st.secrets["REDDIT_PASSWORD"],
+                    secret_key=st.secrets["REDDIT_SECRET_KEY"],
                     client_id=st.secrets["REDDIT_CLIENT_ID"]
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
