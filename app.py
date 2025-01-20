@@ -145,15 +145,15 @@ sys.path.append(".")  # necessary for importing files
 
 def main():
     st.title("Checking Eurus")
-    st.text(st.secrets['REDDIT_USERNAME'])
-    st.text(st.secrets["REDDIT_SECRET_KEY"])
-    st.text(st.secrets["REDDIT_PASSWORD"])
-    st.text(st.secrets["REDDIT_CLIENT_ID"])
+    # st.text(st.secrets['REDDIT_USERNAME'])
+    # st.text(st.secrets["REDDIT_SECRET_KEY"])
+    # st.text(st.secrets["REDDIT_PASSWORD"],)
+    # st.text()
     ws = RedditRetriever(
-        username=st.secrets["REDDIT_USERNAME"],
-        secret_key=st.secrets["REDDIT_SECRET_KEY"],
-        password=st.secrets["REDDIT_PASSWORD"],
-        client_id=st.secrets["REDDIT_CLIENT_ID"]
+        st.secrets["REDDIT_USERNAME"],
+        st.secrets["REDDIT_PASSWORD"],
+        st.secrets["REDDIT_CLIENT_ID"],
+        st.secrets["REDDIT_SECRET_KEY"],
     )
     query = st.text_input("Enter the input", "")
 
