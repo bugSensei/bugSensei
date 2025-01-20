@@ -146,6 +146,9 @@ sys.path.append(".")  # necessary for importing files
 def main():
     st.title("Checking Eurus")
     st.text(st.secrets['REDDIT_USERNAME'])
+    st.text(st.secrets["REDDIT_SECRET_KEY"])
+    st.text(st.secrets["REDDIT_PASSWORD"])
+    st.text(st.secrets["REDDIT_CLIENT_ID"])
     ws = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
