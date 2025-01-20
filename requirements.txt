@@ -1,7 +1,7 @@
 selenium
 scrapy
 datetime
-snowflake-python-connector
+snowflake-connector-python
 mistralai
 llama-index
 tavily-python
