@@ -149,6 +149,7 @@ def main():
     # st.text(st.secrets["REDDIT_SECRET_KEY"])
     # st.text(st.secrets["REDDIT_PASSWORD"],)
     # st.text()
+    os.makedirs(os.path.join(os.getcwd(), 'content', 'output', 'reddit'), exist_ok=True)
     reddit_retriever = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
