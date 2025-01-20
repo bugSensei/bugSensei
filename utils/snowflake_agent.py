@@ -34,19 +34,20 @@ class Snowflake:
         self.cursor.close()
         self.conn.close()
 
-    def upload_texts_to_snowflake(self, texts, table_name="", stage_name=""):
+    def upload_texts_to_snowflake(self, texts, stage_name="docs", chunk_table_name="docs_chunks_table"):
         """
-        Converts a list of text strings to a temporary text file and uploads it to Snowflake.
+        Converts a list of text strings to a temporary text file and uploads it to Snowflake,
+        then processes the file to mimic the behavior of the Snowflake task.
 
         :param texts: List of strings to store in Snowflake.
-        :param table_name: Snowflake table name to upload data to.
         :param stage_name: Snowflake stage name to use.
+        :param chunk_table_name: Snowflake table to insert processed chunks into.
         """
         try:
             # Step 1: Create a temporary file to store the text data
             with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as temp_file:
                 temp_file.write('\n'.join(texts))
-                temp_file_path = temp_file.name 
+                temp_file_path = temp_file.name
             print(f"Temporary file created at: {temp_file_path}")
 
             # Step 2: Ensure the Snowflake stage exists (creates if not already present)
@@ -57,20 +58,30 @@ class Snowflake:
             self.cursor.execute(f"PUT file://{temp_file_path} @{stage_name};")
             print(f"File '{temp_file_path}' successfully uploaded to stage '{stage_name}'.")
 
-            # Step 4: Copy the data from the stage into the target table
+            # Step 5: Process the data to mimic the task behavior
             self.cursor.execute(f"""
-                COPY INTO {table_name}(text_content)
-                FROM @{stage_name}/{os.path.basename(temp_file_path)}
-                FILE_FORMAT = (TYPE = 'CSV' FIELD_OPTIONALLY_ENCLOSED_BY = '"' FIELD_DELIMITER = '\n');
+                INSERT INTO {chunk_table_name} (relative_path, size, file_url, scoped_file_url, chunk)
+                SELECT 
+                    relative_path, 
+                    size,
+                    file_url, 
+                    build_scoped_file_url(@{stage_name}, relative_path) as scoped_file_url,
+                    func.chunk as chunk
+                FROM 
+                    TABLE(text_chunker(
+                        TO_VARCHAR(SNOWFLAKE.CORTEX.PARSE_DOCUMENT(
+                            @{stage_name}, relative_path, {{'mode': 'LAYOUT'}})
+                        )
+                    )) as func;
             """)
-            print(f"Data successfully loaded into Snowflake table '{table_name}'.")
+            print(f"Data successfully processed and loaded into '{chunk_table_name}'.")
 
         except Exception as e:
             print(f"Error during upload: {e}")
-            self.conn.rollback() 
+            self.conn.rollback()
 
         finally:
-            # Step 5: Cleanup - Delete the temporary file
+            # Step 6: Cleanup - Delete the temporary file
             try:
                 if os.path.exists(temp_file_path):
                     os.remove(temp_file_path)
