@@ -27,7 +27,7 @@ class MicrosoftForum:
     def get_data(self, url):
         try:
             self.driver.get(url)
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 30).until(
                 EC.presence_of_element_located(
                     (By.CSS_SELECTOR, "#Main #PageContent #threadContainer")
                 )

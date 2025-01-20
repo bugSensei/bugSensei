@@ -162,7 +162,7 @@ def main():
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
-    mc = MicrosoftForum()
+    mc = Lenov
 
     if st.button("Get Data"):
         try:
