@@ -5,6 +5,7 @@ import sys
 import json
 
 from utils.eurus import Eurus
+from utils.bots.lenovoforums import LenovoForum
 
 
 sys.path.append('.') # necessary for importing files
@@ -144,12 +145,12 @@ sys.path.append('.') # necessary for importing files
 
 def main():
     st.title("Checking Eurus")
-    ws = Eurus()
+    ws = LenovoForum()
     query = st.text_input("Enter the google search")
 
     if st.button("Get Data"):
         try:
-            ws.get_extracted_results(query)
+            ws.lenovoforum_retriever.get_and_process_data(urls = [query]) 
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
