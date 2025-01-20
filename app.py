@@ -5,10 +5,10 @@ import sys
 import json
 
 from utils.eurus import Eurus
-from utils.bots.lenovoforums import LenovoForum
+from utils.bots.reddit import RedditRetriever
 
 
-sys.path.append('.') # necessary for importing files
+sys.path.append(".")  # necessary for importing files
 
 # st.set_page_config(page_title="BugSensei", layout="wide")
 # client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
@@ -145,17 +145,22 @@ sys.path.append('.') # necessary for importing files
 
 def main():
     st.title("Checking Eurus")
-    ws = LenovoForum()
-    query = st.text_input("Enter the input","")
+    ws = RedditRetriever(
+        username=st.secrets["REDDIT_USERNAME"],
+        secret_key=st.secrets["REDDIT_SECRET_KEY"],
+        password=st.secrets["REDDIT_PASSWORD"],
+        client_id=st.secrets["REDDIT_CLIENT_ID"],
+    )
+    query = st.text_input("Enter the input", "")
 
     if st.button("Get Data"):
         try:
-            ws.get_and_process_data([query]) 
+            ws.get_and_process_data([query])
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
                         file_path = os.path.join(root, file)
-                        
+
                         # Load and display the JSON content
                         with open(file_path, "r") as f:
                             try:
@@ -167,5 +172,5 @@ def main():
         except Exception as e:
             st.text(e)
 
-main()
 
+main()
