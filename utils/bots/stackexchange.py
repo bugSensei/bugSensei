@@ -16,7 +16,7 @@ class StackExchangeRetriever:
 
         self.output_directory = "./content/output/stackexchange"
         if not os.path.exists(self.output_directory):
-            os.makedirs(self.output_directory)
+            os.makedirs(self.output_directory,exist_ok=True)
     # gets the formatted urls with self.base_url as the prefix and also the updated endpoints based on the self.payload_endpoints
     def get_formatted_url_and_domain_name(self, url, payload=""):
         question_id = url.split("/questions/")[1].split("/")[0]

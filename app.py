@@ -6,6 +6,7 @@ import json
 
 from utils.eurus import Eurus
 from utils.bots.reddit import RedditRetriever
+from utils.bots.stackexchange import StackExchangeRetriever
 
 
 sys.path.append(".")  # necessary for importing files
@@ -156,11 +157,12 @@ def main():
         password=st.secrets["REDDIT_PASSWORD"],
         client_id=st.secrets["REDDIT_CLIENT_ID"]
     )
+    stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
     if st.button("Get Data"):
         try:
-            reddit_retriever.get_and_process_data([query])
+            stackexchange.get_and_process_data([query])
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
