@@ -1,7 +1,8 @@
-selenium
 scrapy
 datetime
 snowflake-connector-python
 mistralai
 llama-index
 tavily-python
+seleniumbase
+webdriver-manager
