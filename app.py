@@ -147,7 +147,7 @@ sys.path.append(".")  # necessary for importing files
 #         f'<div class="assistant-message">{full_response}</div>', unsafe_allow_html=True
 #     )
 
-# working commit ##
+# working commit - finally ##
 def main():
     st.title("Checking Eurus")
     # st.text(st.secrets['REDDIT_USERNAME'])
