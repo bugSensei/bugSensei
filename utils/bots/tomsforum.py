@@ -97,7 +97,7 @@ class TomsForumRunner:
     def __init__(self, output_directory="/content/output/tomsforum/"):
         self.output_directory = output_directory
         if not os.path.exists(self.output_directory):
-            os.makedirs(self.output_directory)
+            os.makedirs(self.output_directory,exist_ok=True)
 
     def run_spider(self, spider, **kwargs):
         def f(q, spider, kwargs):
