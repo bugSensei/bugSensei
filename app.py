@@ -164,11 +164,11 @@ def main():
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
-    mc = LenovoForum()
+    mc = Eurus()
 
     if st.button("Get Data"):
         try:
-            mc.get_and_process_data([query])
+            mc.get_extracted_results(query)
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):

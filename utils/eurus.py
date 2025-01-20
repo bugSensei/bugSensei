@@ -231,11 +231,11 @@ class Eurus:
                     amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
             except Exception as e:
                 print("Amd Forum failed to extract data")
-            try:
-                if lenovoforum_retriever:
-                    lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
-            except Exception as e:
-                print("LenovoForums failed to extract data!")
+            # try:
+            #     if lenovoforum_retriever:
+            #         lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
+            # except Exception as e:
+            #     print("LenovoForums failed to extract data!")
 
             # # running all retrieval processes simulataneously
             # try:
