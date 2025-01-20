@@ -4,6 +4,7 @@ import pandas as pd
 import os
 import shutil
 import streamlit as st
+from fpdf import FPDF
 
 class Snowflake:
     def __init__(self, num_chunks=3):
@@ -16,14 +17,24 @@ class Snowflake:
             'schema': st.secrets["SNOWFLAKE_SCHEMA"]
         }
 
+        # conn = snowflake.connector.connect(
+        #         user=snowflake_config['user'],
+        #         password=snowflake_config['password'],
+        #         account=snowflake_config['account'],
+        #         warehouse=snowflake_config['warehouse'],
+        #         database=snowflake_config['database'],
+        #         schema=snowflake_config['schema']
+        #     )
+        
         conn = snowflake.connector.connect(
-                user=snowflake_config['user'],
-                password=snowflake_config['password'],
-                account=snowflake_config['account'],
-                warehouse=snowflake_config['warehouse'],
-                database=snowflake_config['database'],
-                schema=snowflake_config['schema']
+                user="BUGSENSEI07",
+                password="Bug@sense1@2025",
+                account="HKB67249.us-east-1",
+                warehouse="COMPUTE_WH",
+                database="CC_QUICKSTART_CORTEX_SEARCH_DOCS",
+                schema="DATA"
             )
+
         cursor = conn.cursor()
 
         self.conn = conn
@@ -36,7 +47,7 @@ class Snowflake:
 
     def upload_texts_to_snowflake(self, texts, stage_name="docs", chunk_table_name="docs_chunks_table"):
         """
-        Converts a list of text strings to a temporary text file and uploads it to Snowflake,
+        Converts a list of text strings to a PDF, uploads it to Snowflake,
         then processes the file to mimic the behavior of the Snowflake task.
 
         :param texts: List of strings to store in Snowflake.
@@ -44,36 +55,37 @@ class Snowflake:
         :param chunk_table_name: Snowflake table to insert processed chunks into.
         """
         try:
-            # Step 1: Create a temporary file to store the text data
-            with tempfile.NamedTemporaryFile(delete=False, mode='w', suffix='.txt') as temp_file:
-                temp_file.write('\n'.join(texts))
-                temp_file_path = temp_file.name
-            print(f"Temporary file created at: {temp_file_path}")
+            # Step 1: Convert the texts to a PDF
+            pdf_filename = tempfile.mktemp(suffix='.pdf')
+            self.convert_text_to_pdf('\n'.join(texts), pdf_filename)
+            print(f"PDF file created at: {pdf_filename}")
 
             # Step 2: Ensure the Snowflake stage exists (creates if not already present)
             self.cursor.execute(f"CREATE OR REPLACE STAGE {stage_name};")
             print(f"Snowflake stage '{stage_name}' is ready.")
 
-            # Step 3: Upload the temporary file to the Snowflake stage
-            self.cursor.execute(f"PUT file://{temp_file_path} @{stage_name};")
-            print(f"File '{temp_file_path}' successfully uploaded to stage '{stage_name}'.")
+            # Step 3: Upload the PDF to the Snowflake stage
+            self.cursor.execute(f"PUT file://{pdf_filename} @{stage_name} AUTO_COMPRESS = FALSE;")
+            print(f"File '{pdf_filename}' successfully uploaded to stage '{stage_name}'.")
 
-            # Step 5: Process the data to mimic the task behavior
-            self.cursor.execute(f"""
-                INSERT INTO {chunk_table_name} (relative_path, size, file_url, scoped_file_url, chunk)
-                SELECT 
-                    relative_path, 
-                    size,
-                    file_url, 
-                    build_scoped_file_url(@{stage_name}, relative_path) as scoped_file_url,
-                    func.chunk as chunk
-                FROM 
-                    TABLE(text_chunker(
-                        TO_VARCHAR(SNOWFLAKE.CORTEX.PARSE_DOCUMENT(
-                            @{stage_name}, relative_path, {{'mode': 'LAYOUT'}})
-                        )
-                    )) as func;
+            self.cursor.execute("""
+                ALTER STAGE docs SET DIRECTORY = (ENABLE = TRUE);
             """)
+
+            input_text = '\n'.join(texts)  # Combine all your texts into a single string
+
+            self.cursor.execute(f"""
+                insert into docs_chunks_table (relative_path, size, file_url, scoped_file_url, chunk)
+                select 
+                    'direct_text' as relative_path,  -- Placeholder for relative_path
+                    LENGTH('{input_text}') as size,  -- Calculate the size of the input text
+                    'your_file_url' as file_url,  -- Provide the file URL (use placeholder or actual URL)
+                    build_scoped_file_url(@docs, 'direct_text') as scoped_file_url,
+                    chunk as chunk  -- Get the chunk from the function
+                from 
+                    table(text_chunker('{input_text}'))  -- Call your custom function here
+            """)
+
             print(f"Data successfully processed and loaded into '{chunk_table_name}'.")
 
         except Exception as e:
@@ -81,13 +93,23 @@ class Snowflake:
             self.conn.rollback()
 
         finally:
-            # Step 6: Cleanup - Delete the temporary file
+            # Step 5: Cleanup - Delete the temporary PDF file
             try:
-                if os.path.exists(temp_file_path):
-                    os.remove(temp_file_path)
-                    print(f"Temporary file '{temp_file_path}' has been deleted.")
+                if os.path.exists(pdf_filename):
+                    os.remove(pdf_filename)
+                    print(f"Temporary PDF file '{pdf_filename}' has been deleted.")
             except Exception as cleanup_error:
                 print(f"Error during cleanup: {cleanup_error}")
+
+
+    def convert_text_to_pdf(self, text, pdf_filename):
+        """Converts a text string to a PDF and saves it."""
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.multi_cell(0, 10, text)
+        pdf.output(pdf_filename)
 
 
     def create_prompt(self, myquestion):
@@ -252,6 +274,7 @@ class Snowflake:
 
 
 # example usage
-# if __name__ == "__main__":
-#     snowflake = Snowflake()
-#     #initialise the web bots
+if __name__ == "__main__":
+    snowflake = Snowflake()
+    snowflake.upload_texts_to_snowflake(["This is a test document."])
+    #initialise the web bots
