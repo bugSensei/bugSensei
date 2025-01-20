@@ -106,7 +106,7 @@ class Snowflake:
                     chunk
             FROM docs_chunks_table
             ORDER BY similarity DESC
-            LIMIT ?
+            LIMIT 5
         )
         SELECT chunk, relative_path FROM results;
         """
