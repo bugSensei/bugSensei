@@ -18,94 +18,94 @@ sys.path.append('.') # necessary for importing files
 #     return chat_response.choices[0].message.content
 
 
-st.markdown(
-    """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+# st.markdown(
+#     """
+# <style>
+# @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-[data-testid="stAppViewContainer"]{
-background-color:#f8f9fa;
-}
-[data-testid="stHeader"]{
-background-color:#f8f9fa;
-}
-[data-testid="stTool"]{
-background-color:#f8f9fa;
-}
-[data-testid="stBottomBlockContainer"]{
-background-color:#f8f9fa;
-}
+# [data-testid="stAppViewContainer"]{
+# background-color:#f8f9fa;
+# }
+# [data-testid="stHeader"]{
+# background-color:#f8f9fa;
+# }
+# [data-testid="stTool"]{
+# background-color:#f8f9fa;
+# }
+# [data-testid="stBottomBlockContainer"]{
+# background-color:#f8f9fa;
+# }
 
-.stChatInput{
-margin-right:100px;
-background-color:white;
+# .stChatInput{
+# margin-right:100px;
+# background-color:white;
 
-}
-.st-be{
-color:black;
-}
+# }
+# .st-be{
+# color:black;
+# }
 
-.st-bw{
-caret-color:black;
-}
+# .st-bw{
+# caret-color:black;
+# }
 
-.heading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 50px; /* Increase font size */
-    font-family: "IBM Plex Mono", sans-serif; /* Apply imported font */
-    font-weight: 300; /* Adjust font weight if needed */
-    color: black; /* Optional: Change text color */
-    margin: 20px 0; /* Optional: Add spacing */
-}
+# .heading {
+#     display: flex;
+#     justify-content: center;
+#     align-items: center;
+#     font-size: 50px; /* Increase font size */
+#     font-family: "IBM Plex Mono", sans-serif; /* Apply imported font */
+#     font-weight: 300; /* Adjust font weight if needed */
+#     color: black; /* Optional: Change text color */
+#     margin: 20px 0; /* Optional: Add spacing */
+# }
 
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    align-items:center;
-    width: 100%;
-    background-color: #403d39;
-}
+# .chat-container {
+#     display: flex;
+#     flex-direction: column;
+#     align-items:center;
+#     width: 100%;
+#     background-color: #403d39;
+# }
 
-.user-message, .assistant-message {
-    border-radius: 10px;
-    /*border: 2px solid white; Add a white outline */
-    background-color: transparent; /* Transparent background */
-    padding-left: 30px;
-    padding-right:30px;
-    padding-top:10px;
-    padding-bottom:10px;
-    margin-bottom: 15px;
-    max-width: 70%;
-    width: fit-content;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    color: #232323; /* White text color for visibility */
-    font-size: 18px;
-    font-family: "IBM Plex Mono", serif;
-    font-weight: 400;
-    font-style: normal;
-}
+# .user-message, .assistant-message {
+#     border-radius: 10px;
+#     /*border: 2px solid white; Add a white outline */
+#     background-color: transparent; /* Transparent background */
+#     padding-left: 30px;
+#     padding-right:30px;
+#     padding-top:10px;
+#     padding-bottom:10px;
+#     margin-bottom: 15px;
+#     max-width: 70%;
+#     width: fit-content;
+#     word-wrap: break-word;
+#     overflow-wrap: break-word;
+#     color: #232323; /* White text color for visibility */
+#     font-size: 18px;
+#     font-family: "IBM Plex Mono", serif;
+#     font-weight: 400;
+#     font-style: normal;
+# }
 
-.user-message {
-    align-self: flex-end;
-    margin-left: auto;
-    text-align: left;
-    background-color:#dee2e6
-}
+# .user-message {
+#     align-self: flex-end;
+#     margin-left: auto;
+#     text-align: left;
+#     background-color:#dee2e6
+# }
 
-.assistant-message {
-    align-self: center;
-    margin-right: 0 auto;
-    text-align: left;
-    background-color:#dee2e6
-}
+# .assistant-message {
+#     align-self: center;
+#     margin-right: 0 auto;
+#     text-align: left;
+#     background-color:#dee2e6
+# }
 
-</style>
-""",
-    unsafe_allow_html=True,
-)
+# </style>
+# """,
+#     unsafe_allow_html=True,
+# )
 
 # st.markdown('<div class="heading">BugSensei</div>', unsafe_allow_html=True)
 
