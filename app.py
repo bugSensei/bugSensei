@@ -149,7 +149,7 @@ def main():
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
         password=st.secrets["REDDIT_PASSWORD"],
-        client_id=st.secrets["REDDIT_CLIENT_ID"],
+        client_id=st.secrets["REDDIT_CLIENT_ID"]
     )
     query = st.text_input("Enter the input", "")
 

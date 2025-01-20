@@ -188,7 +188,7 @@ class Eurus:
                     username=st.secrets["REDDIT_USERNAME"],
                     secret_key=st.secrets["REDDIT_SECRET_KEY"],
                     password=st.secrets["REDDIT_PASSWORD"],
-                    client_id=st.secrets["REDDIT_CLIENT_ID"],
+                    client_id=st.secrets["REDDIT_CLIENT_ID"]
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
                 tomsforum_retriever = TomsForumRunner()
