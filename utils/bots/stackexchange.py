@@ -102,6 +102,7 @@ class StackExchangeRetriever:
         extract_general_info(content, data_general_info)
         extract_answers(content, data_answers)
         extract_comments_replies(content, data_comments_replies)
+        
 
         with open(self.output_directory+f"/{file_index}.json", "w") as f:
             json.dump(content, f, indent=3)
