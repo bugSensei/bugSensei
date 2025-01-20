@@ -159,7 +159,7 @@ def main():
 
     if st.button("Get Data"):
         try:
-            ws.get_and_process_data([query])
+            reddit_retriever.get_and_process_data([query])
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
