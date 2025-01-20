@@ -146,11 +146,11 @@ sys.path.append('.') # necessary for importing files
 def main():
     st.title("Checking Eurus")
     ws = LenovoForum()
-    query = st.text_input("Enter the google search")
+    query = st.text_input("Enter the input","")
 
     if st.button("Get Data"):
         try:
-            ws.get_and_process_data(urls = [query]) 
+            ws.get_and_process_data([query]) 
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
