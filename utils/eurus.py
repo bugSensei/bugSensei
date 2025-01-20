@@ -12,6 +12,7 @@ import json
 import re
 import concurrent.futures
 import streamlit as st
+
 # from dotenv import load_dotenv
 
 
@@ -23,12 +24,12 @@ from selenium import webdriver
 from tavily import TavilyClient
 
 # importing from utils
-from utils.bots import RedditRetriever
-from utils.bots import StackExchangeRetriever
-from utils.bots import TomsForumRunner
-from utils.bots import MicrosoftForum
-from utils.bots import AmdCommunity
-from utils.bots import LenovoForum
+from utils.bots.reddit import RedditRetriever
+from utils.bots.stackexchange import StackExchangeRetriever
+from utils.bots.tomsforum import TomsForumRunner
+from utils.bots.microsoft_forum import MicrosoftForum
+from utils.bots.amd_community import AmdCommunity
+from utils.bots.lenovoforums import LenovoForum
 
 # load_dotenv()
 
@@ -103,9 +104,9 @@ class Eurus:
     #     return result
 
     def getTavily(self, query):
-        tavily_client = TavilyClient(api_key=st.secrets['TAVILY_API_KEY'])
+        tavily_client = TavilyClient(api_key=st.secrets["TAVILY_API_KEY"])
         response = tavily_client.search(query, max_results=10)
-        with open("gsearch.json", "w") as f:
+        with open("./output/gsearch.json", "w") as f:
             json.dump(response["results"], f, indent=3)
         return response["results"]
 
@@ -185,9 +186,9 @@ class Eurus:
             if len(mapped_urls.get("reddit", [])) != 0:
                 reddit_retriever = RedditRetriever(
                     username=st.secrets["REDDIT_USERNAME"],
-                    secret_key=st.secrets["REDDIT_SECRET_KEY"],
                     password=st.secrets["REDDIT_PASSWORD"],
-                    client_id=st.secrets["REDDIT_CLIENT_ID"],
+                    secret_key=st.secrets["REDDIT_SECRET_KEY"],
+                    client_id=st.secrets["REDDIT_CLIENT_ID"]
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
                 tomsforum_retriever = TomsForumRunner()
@@ -199,50 +200,32 @@ class Eurus:
                 lenovoforum_retriever = LenovoForum()
 
             # a list containing all the functions to be executed concurrently
-            tasks = []
+            # tasks = []
 
             if stackexchange_retriever:
-                tasks.append(
-                    lambda: stackexchange_retriever.get_and_process_data(
-                        mapped_urls["stackexchange"]
-                    )
+                stackexchange_retriever.get_and_process_data(
+                    mapped_urls["stackexchange"]
                 )
             if reddit_retriever:
-                tasks.append(
-                    lambda: reddit_retriever.get_and_process_data(mapped_urls["reddit"])
-                )
+                reddit_retriever.get_and_process_data(mapped_urls["reddit"])
             if tomsforum_retriever:
-                tasks.append(
-                    lambda: tomsforum_retriever.get_and_process_data(
-                        mapped_urls["tomsforum"]
-                    )
-                )
+                tomsforum_retriever.get_and_process_data(mapped_urls["tomsforum"])
             if answers_microsoft_retriever:
-                tasks.append(
-                    lambda: answers_microsoft_retriever.get_and_process_data_multiple(
-                        mapped_urls["answers_microsoft"]
-                    )
+                answers_microsoft_retriever.get_and_process_data_multiple(
+                    mapped_urls["answers_microsoft"]
                 )
             if amdforum_retriever:
-                tasks.append(
-                    lambda: amdforum_retriever.get_and_process_data(
-                        mapped_urls["amdforum"]
-                    )
-                )
+                amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
             if lenovoforum_retriever:
-                tasks.append(
-                    lambda: lenovoforum_retriever.get_and_process_data(
-                        mapped_urls["lenovoforum"]
-                    )
-                )
+                lenovoforum_retriever.get_and_process_data(mapped_urls["lenovoforum"])
 
-            # running all retrieval processes simulataneously
-            try:
-                with concurrent.futures.ThreadPoolExecutor() as executor:
-                    results = executor.map(lambda f: f(), tasks)
-            except Exception as e:
-                raise Exception("Eurus : generate_entities() : retrieval failed !")
-                print(e)
+            # # running all retrieval processes simulataneously
+            # try:
+            #     with concurrent.futures.ThreadPoolExecutor() as executor:
+            #         results = executor.map(lambda f: f(), tasks)
+            # except Exception as e:
+            #     raise Exception("Eurus : generate_entities() : retrieval failed !")
+            #     print(e)
 
     def get_extracted_results(self, search_query):
         try:
@@ -258,8 +241,8 @@ class Eurus:
             raise Exception("Eurus : get_extracted_results() : extraction failed!")
             print(e)
 
-    def __del__(self):
-        self.driver.quit()
+    # def __del__(self):
+    #     self.driver.quit()
 
 
 ### Example Usage ###
