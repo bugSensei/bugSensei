@@ -150,7 +150,7 @@ def main():
 
     if st.button("Get Data"):
         try:
-            ws.lenovoforum_retriever.get_and_process_data(urls = [query]) 
+            ws.get_and_process_data(urls = [query]) 
             for root, dirs, files in os.walk("./content/output"):
                 for file in files:
                     if file.endswith(".json"):
