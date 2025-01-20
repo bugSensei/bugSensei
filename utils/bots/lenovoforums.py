@@ -30,7 +30,7 @@ class LenovoForum:
         try:
             self.driver.get(url)
             # wait for the page to load
-            WebDriverWait(self.driver, 20).until(
+            WebDriverWait(self.driver, 30).until(
                 EC.presence_of_element_located(
                     (
                         By.CSS_SELECTOR,
