@@ -258,8 +258,8 @@ class Eurus:
             raise Exception("Eurus : get_extracted_results() : extraction failed!")
             print(e)
 
-    def __del__(self):
-        self.driver.quit()
+    # def __del__(self):
+    #     self.driver.quit()
 
 
 ### Example Usage ###
