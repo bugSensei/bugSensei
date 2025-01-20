@@ -166,3 +166,5 @@ def main():
         except Exception as e:
             st.text(e)
 
+main()
+
