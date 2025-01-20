@@ -1,6 +1,10 @@
 import os
 import streamlit as st
 from mistralai import Mistral
+import sys
+
+
+sys.path.append('.') # necessary for importing files
 
 st.set_page_config(page_title="BugSensei", layout="wide")
 client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
