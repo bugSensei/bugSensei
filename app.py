@@ -8,6 +8,7 @@ from utils.eurus import Eurus
 from utils.bots.reddit import RedditRetriever
 from utils.bots.stackexchange import StackExchangeRetriever
 from utils.bots.microsoft_forum import MicrosoftForum
+from utils.bots.amd_community import AmdCommunity
 
 
 sys.path.append(".")  # necessary for importing files
@@ -161,7 +162,7 @@ def main():
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
-    mc = MicrosoftForum()
+    mc = AmdCommunity()
 
     if st.button("Get Data"):
         try:
