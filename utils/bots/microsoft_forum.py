@@ -35,11 +35,11 @@ class MicrosoftForum:
             main = self.driver.find_element(
                 By.CSS_SELECTOR, "#Main #PageContent #threadContainer"
             )
-            with open("temp.txt", "w") as f:
-                f.write(self.driver.page_source)
+            # with open("temp.txt", "w") as f:
+            #     f.write(self.driver.page_source)
             return main
         except Exception as e:
-            raise Exception("get_data() : GET() failed") from e
+            raise Exception("get_data() : GET() failed")
 
     def get_formatted_date(self, date_string):
         pattern = (
