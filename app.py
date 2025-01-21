@@ -155,20 +155,32 @@ def main():
     # st.text(st.secrets["REDDIT_SECRET_KEY"])
     # st.text(st.secrets["REDDIT_PASSWORD"],)
     # st.text()
-    if 'temp_dir' not in st.session_state:
-        content_dir = os.path.join(os.getcwd(), 'content')  # Path for storing temp directories
-        os.makedirs(content_dir, exist_ok=True)  # Ensure the content directory exists
+    current_cwd = os.getcwd()
 
-        temp_dir = tempfile.mkdtemp(dir=content_dir)  # Create a unique temporary directory within './content'
-        st.session_state.temp_dir = temp_dir
+    # Define the base directory where temporary files will be stored
+    base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './content' under the CWD
+
+    # Create a unique temporary directory under the current working directory
+    if 'temp_dir' not in st.session_state:
+        temp_base_dir = tempfile.mkdtemp(dir=base_dir)  # Create a temp directory under './content'
+        content_dir = os.path.join(temp_base_dir, 'content')  # Create 'content' under the temp directory
+        
+        # Ensure 'content' directory exists
+        os.makedirs(content_dir, exist_ok=True)
+
+        # Store the path in session state
+        st.session_state.temp_dir = content_dir
+
+    # Display the path to ensure it's correct
     st.text(st.session_state.temp_dir)
+
+    # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
         password=st.secrets["REDDIT_PASSWORD"],
         client_id=st.secrets["REDDIT_CLIENT_ID"],
         output_directory=st.session_state.temp_dir
-        
     )
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
