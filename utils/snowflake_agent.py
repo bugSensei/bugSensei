@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import shutil
 import streamlit as st
-from fpdf import FPDF
+# from fpdf import FPDF
 from snowflake.core import Root
 from snowflake.snowpark import Session
 
