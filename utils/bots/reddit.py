@@ -21,11 +21,11 @@ class RedditRetriever:
             self.client_id = client_id
             self.client_secret = secret_key
 
-            self.output_directory = output_directory
+            self.output_directory = output_directory+"/reddit"
 
             # checking whether the specified directory exists
-            # if not os.path.exists(self.output_directory):
-            #     os.mkdir(self.output_directory)
+            if not os.path.exists(self.output_directory):
+                os.mkdir(self.output_directory)
 
             # getting the headers; this is the one to be used while making requests to Reddit
             # route the requests via oauth, use self.base_url
