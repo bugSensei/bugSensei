@@ -158,35 +158,48 @@ def main():
     # st.text()
 
 
-    def create_session_specific_temp_dir():
-        # Get the current working directory
-        current_cwd = os.getcwd()
+    # def create_session_specific_temp_dir():
+    #     # Get the current working directory
+    #     current_cwd = os.getcwd()
 
-        # Define the base directory where temporary files will be stored
-        base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './temp_dir' under the CWD
+    #     # Define the base directory where temporary files will be stored
+    #     base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './temp_dir' under the CWD
 
-        # Ensure the base directory exists
-        os.makedirs(base_dir, exist_ok=True)
+    #     # Ensure the base directory exists
+    #     os.makedirs(base_dir, exist_ok=True)
 
-        # Create a unique temporary directory for this session
-        session_temp_dir = tempfile.mkdtemp(dir=base_dir, prefix=f'session_{id(st.session_state)}_')
+    #     # Create a unique temporary directory for this session
+    #     session_temp_dir = tempfile.mkdtemp(dir=base_dir, prefix=f'session_{id(st.session_state)}_')
         
-        # Create a 'content' subdirectory within the session-specific temp directory
-        content_dir = os.path.join(session_temp_dir, 'content')
-        os.makedirs(content_dir, exist_ok=True)
+    #     # Create a 'content' subdirectory within the session-specific temp directory
+    #     content_dir = os.path.join(session_temp_dir, 'content')
+    #     os.makedirs(content_dir, exist_ok=True)
 
-        return content_dir
+    #     return content_dir
 
-    # Check if temp_dir is not already in session state
-    if 'temp_dir' not in st.session_state:
-        # Create a session-specific temporary directory
-        st.session_state.temp_dir = create_session_specific_temp_dir()
+    # # Check if temp_dir is not already in session state
+    # if 'temp_dir' not in st.session_state:
+    #     # Create a session-specific temporary directory
+    #     st.session_state.temp_dir = create_session_specific_temp_dir()
 
     # Display the path to verify
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(uuid.uuid4())
 
     st.text(f"Temporary ID: {st.session_state.session_id}")
+    current_dir = os.getcwd()
+
+    example_path = current_dir+f"/{st.session_state.session_id}"
+    os.makedirs(example_path,exist_ok=True)
+    with open(example_path+"/hello.txt","w") as f:
+        f.write("hello world")
+    f.close()
+    st.text("file written")
+    content = None
+    with open(example_path+"/hello.txt","r") as f:
+        content = f.read()
+    st.text(content)
+
 
     # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
