@@ -13,7 +13,7 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
-from backend import server
+# from backend import server
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
