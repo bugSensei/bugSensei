@@ -179,7 +179,7 @@ def main():
     st.title("Testing Model")
     temp_path = generate_temp_dir()
     eurus = Eurus(output_directory=temp_path)
-    snowflake = Snowflake()
+    # snowflake = Snowflake()
 
     query = st.text_input("Enter the input", "")
 
