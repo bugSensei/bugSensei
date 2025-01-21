@@ -204,7 +204,7 @@ class RedditRetriever:
                         file_name="reddit_processed_" + str(i) + ".json",
                     )
                     self.format_json_to_text(
-                        input_json_filepath=self.output_directory + f"{i}.json"
+                        input_json_filepath=self.output_directory + f"reddit_processed_{i}.json"
                     )
                     print("RedditRetriever() : Data Retrieved and Processed")
                 os.remove(self.output_directory + "reddit.json")
