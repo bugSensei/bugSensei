@@ -182,84 +182,47 @@ def main():
     #     # Create a session-specific temporary directory
     #     st.session_state.temp_dir = create_session_specific_temp_dir()
 
-    # Display the path to verify
-    if "session_id" not in st.session_state:
-        st.session_state.session_id = str(uuid.uuid4())
-
-    st.text(f"Temporary ID: {st.session_state.session_id}")
-    current_dir = os.getcwd()
-
-    example_path = current_dir+f"/{st.session_state.session_id}"
-    os.makedirs(example_path,exist_ok=True)
-    with open(example_path+"/hello.txt","w") as f:
-        f.write("hello world")
-    f.close()
-    st.text("file written")
-    content = None
-    with open(example_path+"/hello.txt","r") as f:
-        content = f.read()
-    st.text(content)
-
-
+    # does not have a trailing slash at the end
+    def generate_temp_dir(): 
+        if "session_id" not in st.session_state:
+            st.session_state.session_id = str(uuid.uuid4())
+        st.text(f"Temporary ID: {st.session_state.session_id}")
+        current_dir = os.getcwd()
+        temp_path = current_dir+f"/{st.session_state.session_id}"
+        os.makedirs(temp_path,exist_ok=True)
+        return temp_path
+    temp_path = generate_temp_dir()
     # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
         password=st.secrets["REDDIT_PASSWORD"],
         client_id=st.secrets["REDDIT_CLIENT_ID"],
-        output_directory=st.session_state.temp_dir
+        output_directory=temp_path,
     )
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
     # mc = Eurus()
-
     if st.button("Get Data"):
-        try:
-            # Retrieve and process data
-            reddit_retriever.get_and_process_data([query])
-            st.text("Data Extracted")
-
-            # Debug: Print the temp directory path
-            st.write(f"Temp Directory: {st.session_state}")
-
-            # Check if the content directory exists
-            content_dir = os.path.join(st.session_state.temp_dir, 'reddit')
-            if not os.path.exists(content_dir):
-                st.warning(f"Content directory does not exist: {content_dir}")
-                return
-
-            # List all files in the content directory and its subdirectories
-            json_files_found = []
             try:
-                for root, _, files in os.walk(content_dir):
+                reddit_retriever.get_extracted_results(query)
+                st.text("Data extracted")
+                for root, dirs, files in os.walk(temp_path):
                     for file in files:
                         if file.endswith(".json"):
                             file_path = os.path.join(root, file)
-                            json_files_found.append(file_path)
                             
-                            # Debug: Print each JSON file path
-                            st.write(f"Found JSON file: {file_path}")
-
-                # If no JSON files found
-                if not json_files_found:
-                    st.warning("No JSON files found in the content directory.")
-
-                # Read and display JSON files
-                for file_path in json_files_found:
-                    try:
-                        with open(file_path, "r", encoding='utf-8') as f:
-                            json_content = json.load(f)
-                            st.subheader(f"Content of {os.path.basename(file_path)}:")
-                            st.json(json_content)
-                    except Exception as file_read_error:
-                        st.error(f"Error reading {file_path}: {file_read_error}")
-
-            except Exception as walk_error:
-                st.error(f"Error walking through content directory: {walk_error}")
-
-        except Exception as e:
-            st.error(f"An error occurred: {e}")
+                            # Load and display the JSON content
+                            with open(file_path, "r") as f:
+                                try:
+                                    json_content = json.load(f)
+                                    st.subheader(f"Content of {file}:")
+                                    st.json(json_content)
+                                except json.JSONDecodeError:
+                                    st.error(f"Error decoding JSON in {file}")
+            except Exception as e:
+                st.text(e)
 
 
 main()
