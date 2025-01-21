@@ -13,7 +13,7 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
-# from backend import server
+# from backend import *
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
@@ -238,7 +238,17 @@ def main():
                                 st.error(f"Error reading file {file_path}: {e}")
                 st.text(text_file_paths)
                 print(text_file_paths)
-             
+                snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
+                st.text("summarized texts")
+                summarize_folder_path = f"{temp_path}/summarize"
+                for filename in os.listdir(summarize_folder_path):
+                    file_path = os.path.join(summarize_folder_path, filename)
+                    print(file_path)
+                    if filename.endswith(".txt") and os.path.isfile(file_path):
+                        with open(file_path, "r") as file:
+                            content = file.read()
+                            with st.expander(f"File:{file_path}"):
+                                st.text(content)
             except Exception as e:
                 st.text(e)
 
