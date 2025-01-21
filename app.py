@@ -193,26 +193,26 @@ def main():
                     st.text("gsearch does not exist")
                 with open(f"{temp_path}/tomsforum/0.json") as f:
                     st.json(json.load(f))
-                root_directory = temp_path
+                root_directory = temp_path+"/"
 
                 # Walk through the directory
                 for dirpath, dirnames, filenames in os.walk(root_directory):
+                    print(f"Checking {dirpath}...")
                     for filename in filenames:
-                        # Only process .json files
+                        print(f"Found file: {filename}")
                         if filename.endswith('.json'):
                             file_path = os.path.join(dirpath, filename)
+                            print(f"Processing file: {file_path}")
                             try:
                                 with open(file_path, 'r', encoding='utf-8') as file:
-                                    # Load JSON content
                                     content = json.load(file)
-                                    
-                                    # Display the JSON content
                                     with st.expander(f"File: {file_path}"):
                                         st.json(content)
                             except json.JSONDecodeError:
                                 st.error(f"Invalid JSON format in file: {file_path}")
                             except Exception as e:
-                                st.error(f"Error reading file {file_path}: {e}")                
+                                st.error(f"Error reading file {file_path}: {e}")
+             
             except Exception as e:
                 st.text(e)
 
