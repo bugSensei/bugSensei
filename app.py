@@ -251,16 +251,18 @@ if prompt := st.chat_input("Enter your query"):
         st.markdown(response1)
     with st.chat_message('assistant'):
         st.markdown(response2)
-    if(index==0):
-        if st.button("Take Action"):
-            snowflake_two = Snowflake()
+
+    if st.button("Take Action"):
+        snowflake_two = Snowflake()
+        with st.spinner():
             response = get_powershell_code(snowflake=snowflake_two,query=response1)
-            st.code(response,language="powershell")
-            index+=1
+        st.code(response,language="powershell")
 
     
     # Add both responses to session messages
-    st.session_state['messages'].append({"role": "assistant", "content": f"{response1}\n\n{response2}"})
+    st.session_state['messages'].append({"role": "assistant", "content": response1})
+    st.session_state['messages'].append({"role": "assistant", "content": response2})
+
 
 
 
