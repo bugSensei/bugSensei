@@ -44,13 +44,21 @@ class Snowflake:
         self.num_chunks = num_chunks
 
         connection_parameters = {
-            'user': '',
-            'password': '',
-            'account': '',
-            'warehouse': '',
-            'database': '',
-            'schema': ''
+            'user':snowflake_config['user'],
+            'password':snowflake_config['password'],
+            'account':snowflake_config['account'],
+            'warehouse':snowflake_config['warehouse'],
+            'database':snowflake_config['database'],
+            'schema':snowflake_config['schema']
         }
+        # connection_parameters = {
+        #     'user': '',
+        #     'password': '',
+        #     'account': '',
+        #     'warehouse': '',
+        #     'database': '',
+        #     'schema': ''
+        # }
         
         session = Session.builder.configs(connection_parameters).create()
         self.session = session
