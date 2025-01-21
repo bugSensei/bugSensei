@@ -14,7 +14,7 @@ But more than often answers related to troubleshooting computer issues  are ofte
 
 And so, in bold attempt, we decided to develop BugSensei. 
 
-[![Streamlit Logo](https://raw.githubusercontent.com/streamlit/streamlit/develop/docs/img/streamlit-logo-dark.svg)](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
+[![Streamlit Logo](https://user-images.githubusercontent.com/7164864/217935870-c0bc60a3-6fc0-4047-b011-7b4c59488c91.png)](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
 
 
 ### Developed By
