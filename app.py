@@ -38,7 +38,7 @@ background-color:#f8f9fa;
 }
 
 .stChatInput{
-margin-right:100px;
+/*margin-right:100px;*/
 background-color:white;
 
 }
@@ -216,7 +216,7 @@ if prompt := st.chat_input("Type your message here..."):
     st.markdown(f'<div class="user-message">{prompt}</div>', unsafe_allow_html=True)
 
     with st.spinner():
-        full_response = generate_response()
+        full_response = generate_response(prompt)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
     for i in full_response:
         st.markdown(
