@@ -177,7 +177,7 @@ def generate_temp_dir():
 def main():
     st.title("Testing Model")
     temp_path = generate_temp_dir()
-    eurus = Eurus(output_directoru=temp_path)
+    eurus = Eurus(output_directory=temp_path)
 
     query = st.text_input("Enter the input", "")
 
