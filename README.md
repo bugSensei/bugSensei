@@ -14,7 +14,7 @@ But more than often answers related to troubleshooting computer issues  are ofte
 
 And so, in bold attempt, we decided to develop BugSensei. 
 
-[Streamlit App Link](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
+[Visit the Streamlit App](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
 
 ### Developed By
 
