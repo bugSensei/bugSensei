@@ -187,6 +187,24 @@ def main():
             try:
                 # web results are exeucted
                 eurus.get_extracted_results(query)
+                input_dir = temp_path+"/"
+                summarize_folder = input_dir+"summarize"
+                tot=[]
+                os.makedirs(summarize_folder, exist_ok=True)
+                for i in os.walk(input_dir):
+                    if i[2]:
+                        for file in i[2]:
+                            if file.endswith(".txt"):
+                                full_file_path = os.path.join(i[0], file)
+                                with open(full_file_path, 'r', encoding='utf-8') as file:
+                                    content = file.read()
+                                    with st.expander(f"File: {full_file_path}"):
+                                        st.text(content)
+                                doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
+                                new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
+                                shutil.move(full_file_path, new_file_path)
+                                doc_map = (doc_id, new_file_path)
+                                tot.append(doc_map)
                 # gsearch = None
                 # mc.get_extracted_results(query)
                 # st.text("Data extracted")
