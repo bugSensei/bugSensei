@@ -14,7 +14,7 @@ class TomsForum(scrapy.Spider):
         self,
         file_index,
         start_url,
-        output_directory="./content/output/tomsforum/",
+        output_directory,
         *args,
         **kwargs,
     ):
@@ -126,7 +126,7 @@ class TomsForumRunner:
         else:
             try:
                 for i in range(len(urls)):
-                    self.run_spider(TomsForum, file_index=i, start_url=urls[i])
+                    self.run_spider(TomsForum, file_index=i, start_url=urls[i],output_directory=self.output_directory)
                 print(
                     "TomsForumRunner : get_and_process_data() : Data Retrieved and Processed : ",self.output_directory
                 )
