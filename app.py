@@ -222,8 +222,8 @@ def generate_responses(query):
         # for i in final_responses:
         #     st.text(i)
         upload_files_to_snowflake(snowflake=snowflake,texts=result)
-        code = get_powershell_code(snowflake=snowflake,query=final_responses[0])
-        final_responses.append(code)
+        # code = get_powershell_code(snowflake=snowflake,query=final_responses[0])
+        # final_responses.append(code)
         return final_responses
         # st.text("files uploaded to snowflake")
     except Exception as e:
