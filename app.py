@@ -206,7 +206,7 @@ def main():
     # mc = Eurus()
     if st.button("Get Data"):
             try:
-                reddit_retriever.get_extracted_results(query)
+                reddit_retriever.get_and_process_data([query])
                 st.text("Data extracted")
                 for root, dirs, files in os.walk(temp_path):
                     for file in files:
