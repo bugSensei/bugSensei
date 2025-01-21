@@ -4,6 +4,7 @@ from mistralai import Mistral
 import sys
 import json
 import tempfile
+import uuid
 
 from utils.eurus import Eurus
 from utils.bots.reddit import RedditRetriever
@@ -182,7 +183,10 @@ def main():
         st.session_state.temp_dir = create_session_specific_temp_dir()
 
     # Display the path to verify
-    st.text(f"Temporary directory: {st.session_state}")
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = str(uuid.uuid4())
+
+    st.text(f"Temporary ID: {st.session_state.session_id}")
 
     # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
