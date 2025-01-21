@@ -37,7 +37,7 @@ from utils.bots.lenovoforums import LenovoForum
 # The entire web retreival pipeline is handled via the Eurus Object.
 # extracts relevant search results based on the query and enlists bots based on demand.
 class Eurus:
-    def __init__(self, output_directory="./output/"):
+    def __init__(self, output_directory):
         ## Driver Options - for linux based subsystems
         # self.options = webdriver.ChromeOptions()
         # self.options.add_argument("--no-sandbox")
@@ -46,11 +46,11 @@ class Eurus:
         # self.options.add_argument("--diable-dve-shm-uage")
         # self.driver = webdriver.Chrome(options=self.options)
 
-        # self.output_directory = output_directory
+        self.output_directory = output_directory
 
         ## this is where element of the "search" class is going to be stored
-        if not os.path.exists(output_directory):
-            os.makedirs(output_directory)
+        # if not os.path.exists(output_directory):
+        #     os.makedirs(output_directory)
 
     # automates google search using selenium
     # def google_search(self, search_query):
@@ -182,23 +182,24 @@ class Eurus:
                 stackexchange_retriever = StackExchangeRetriever(
                     access_token=st.secrets["STACK_EXCHANGE_ACCESS_TOKEN"],
                     secret_key=st.secrets["STACK_EXCHANGE_SECRET_KEY"],
+                    output_directory=self.output_directory
                 )
             if len(mapped_urls.get("reddit", [])) != 0:
                 reddit_retriever = RedditRetriever(
                     username=st.secrets["REDDIT_USERNAME"],
                     password=st.secrets["REDDIT_PASSWORD"],
                     secret_key=st.secrets["REDDIT_SECRET_KEY"],
-
-                    client_id=st.secrets["REDDIT_CLIENT_ID"]
+                    client_id=st.secrets["REDDIT_CLIENT_ID"],
+                    output_directory=self.output_directory
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
-                tomsforum_retriever = TomsForumRunner()
+                tomsforum_retriever = TomsForumRunner(output_directory=self.output_directory)
             if len(mapped_urls["answers_microsoft"]) != 0:
-                answers_microsoft_retriever = MicrosoftForum()
+                answers_microsoft_retriever = MicrosoftForum(output_directory=self.output_directory)
             if len(mapped_urls["amdforum"]) != 0:
-                amdforum_retriever = AmdCommunity()
+                amdforum_retriever = AmdCommunity(output_directory=self.output_directory)
             if len(mapped_urls["lenovoforum"]) != 0:
-                lenovoforum_retriever = LenovoForum()
+                lenovoforum_retriever = LenovoForum(output_directory=self.output_directory)
 
             # a list containing all the functions to be executed concurrently
             # tasks = []

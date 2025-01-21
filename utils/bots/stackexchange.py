@@ -3,7 +3,7 @@ import json
 import requests
 
 class StackExchangeRetriever:
-    def __init__(self,access_token,secret_key):
+    def __init__(self,access_token,secret_key,output_directory="./content/output/stackexchange"):
         # use .env file for storing the access token and the secret key
         # could also access stackexchange api without access token, but requests are limited
         # with access tokens, request rate limit is upto ~ 10,000/day
@@ -14,7 +14,7 @@ class StackExchangeRetriever:
         self.headers = {'Authorization': f'Bearer {self.access_token}', 'Accept': 'application/json'}
         self.payload_endpoints = ["", "answers", "comments"]
 
-        self.output_directory = "./content/output/stackexchange"
+        self.output_directory = output_directory+"/stackexchange"
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory,exist_ok=True)
     # gets the formatted urls with self.base_url as the prefix and also the updated endpoints based on the self.payload_endpoints

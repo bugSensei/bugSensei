@@ -18,7 +18,7 @@ class LenovoForum:
         self.driver = webdriver.Chrome(options=options)
 
         # ensuring the directory exists
-        self.output_directory = output_directory
+        self.output_directory = output_directory+"/lenovoforum"
         if not os.path.exists(self.output_directory):
             os.makedirs(self.output_directory)
 
