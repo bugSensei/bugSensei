@@ -218,22 +218,24 @@ def main():
                 root_directory = temp_path+"/"
 
                 # Walk through the directory
+                text_file_paths = []
                 for dirpath, dirnames, filenames in os.walk(root_directory):
                     print(f"Checking {dirpath}...")
                     for filename in filenames:
                         print(f"Found file: {filename}")
                         if filename.endswith('.txt'):
                             file_path = os.path.join(dirpath, filename)
+                            text_file_paths.append(file_path)
                             print(f"Processing file: {file_path}")
                             try:
                                 with open(file_path, 'r', encoding='utf-8') as file:
                                     content = file.read()
                                     with st.expander(f"File: {file_path}"):
                                         st.text(content)
-                            except json.JSONDecodeError:
-                                st.error(f"Invalid JSON format in file: {file_path}")
                             except Exception as e:
                                 st.error(f"Error reading file {file_path}: {e}")
+                st.text(text_file_paths)
+                print(text_file_paths)
              
             except Exception as e:
                 st.text(e)
