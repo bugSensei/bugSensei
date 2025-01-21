@@ -4,7 +4,7 @@ import requests
 
 
 class RedditRetriever:
-    def __init__(self, username, password, client_id, secret_key,output_directory="./content/output/reddit/"):
+    def __init__(self, username, password, client_id, secret_key,output_directory):
         if (
             username is None
             or password is None
@@ -21,7 +21,7 @@ class RedditRetriever:
             self.client_id = client_id
             self.client_secret = secret_key
 
-            self.output_directory = output_directory+"/reddit"
+            self.output_directory = output_directory+"/reddit/"
 
             # checking whether the specified directory exists
             if not os.path.exists(self.output_directory):
