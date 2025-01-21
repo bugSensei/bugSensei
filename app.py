@@ -205,9 +205,9 @@ def main():
                             print(f"Processing file: {file_path}")
                             try:
                                 with open(file_path, 'r', encoding='utf-8') as file:
-                                    content = json.load(file)
+                                    content = file.read()
                                     with st.expander(f"File: {file_path}"):
-                                        st.json(content)
+                                        st.text(content)
                             except json.JSONDecodeError:
                                 st.error(f"Invalid JSON format in file: {file_path}")
                             except Exception as e:
