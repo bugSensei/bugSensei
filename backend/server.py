@@ -35,6 +35,9 @@ def upload_files_to_snowflake(snowflake, dir_path):
 def rank_documents(snowflake, query):
     return snowflake.rerank_documents(query)
 
+def get_powershell_code(snowflake, query):
+    return snowflake.get_powershell_code(query)
+
 
 if __name__ == "__main__":
     snowflake = Snowflake()

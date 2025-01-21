@@ -204,30 +204,41 @@ class Snowflake:
             return self.cursor.fetchone()[0].split("```")[1]
         except Exception as e:
             return f"Error: {e}"
-
-    def summarise(self, input_dir="/content/output/"):
-        summarize_folder = input_dir+"summarize"
-        os.makedirs(summarize_folder, exist_ok=True)
-        tot = []
-        for i in os.walk(input_dir):
-            if i[2]:
-                for file in i[2]:
-                    if file.endswith(".txt"):
-                        full_file_path = os.path.join(i[0], file)
-                        doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
-                        new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
-                        shutil.move(full_file_path, new_file_path)
-                        doc_map = (doc_id, new_file_path)
-                        tot.append(doc_map)
-
-        # all the unsummarized-text files are under /content/output/summarize/
-
-        for file in os.listdir(summarize_folder):
-            with open(os.path.join(summarize_folder, file), 'r') as f:
+        
+    def summarise(self, file_paths,temp_path):
+        summary_folder = f"{temp_path}/summarize"
+        os.makedirs(summary_folder, exist_ok=True)
+        for i, file_path in enumerate(file_paths):
+            with open(file_path, 'r') as f:
                 text = f.read()
                 summary = self.summarize_text(text)
-                with open(os.path.join(summarize_folder, file), 'w') as f:
+                with open(os.path.join(summary_folder, f"{i}.txt"), 'w') as f:
                     f.write(summary)
+        return summary_folder
+                
+    # def summarise(self, input_dir="/content/output/"):
+    #     summarize_folder = input_dir+"summarize"
+    #     os.makedirs(summarize_folder, exist_ok=True)
+    #     tot = []
+    #     for i in os.walk(input_dir):
+    #         if i[2]:
+    #             for file in i[2]:
+    #                 if file.endswith(".txt"):
+    #                     full_file_path = os.path.join(i[0], file)
+    #                     doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
+    #                     new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
+    #                     shutil.move(full_file_path, new_file_path)
+    #                     doc_map = (doc_id, new_file_path)
+    #                     tot.append(doc_map)
+
+    #     # all the unsummarized-text files are under /content/output/summarize/
+
+    #     for file in os.listdir(summarize_folder):
+    #         with open(os.path.join(summarize_folder, file), 'r') as f:
+    #             text = f.read()
+    #             summary = self.summarize_text(text)
+    #             with open(os.path.join(summarize_folder, file), 'w') as f:
+    #                 f.write(summary)
     
     def summarize_text(self, text):
         query = f"""

@@ -14,7 +14,7 @@ from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
 from backend import server
-
+from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
 
@@ -179,6 +179,7 @@ def main():
     st.title("Testing Model")
     temp_path = generate_temp_dir()
     eurus = Eurus(output_directoru=temp_path)
+    snowflake = Snowflake()
 
     query = st.text_input("Enter the input", "")
 
