@@ -200,7 +200,7 @@ def main():
                     print(f"Checking {dirpath}...")
                     for filename in filenames:
                         print(f"Found file: {filename}")
-                        if filename.endswith('.json'):
+                        if filename.endswith('.txt'):
                             file_path = os.path.join(dirpath, filename)
                             print(f"Processing file: {file_path}")
                             try:
