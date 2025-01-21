@@ -170,62 +170,61 @@ def generate_responses(query):
     eurus = Eurus(output_directory=temp_path)
     snowflake = Snowflake()
 
-    query = st.text_input("Enter the input", "")
+    # query = st.text_input("Enter the input", "")
 
     #mc = Eurus(output_directory=temp_path)
-    if st.button("Get Data"):
-            try:
-                # st.text("rag")
-                rag_retreival = snowflake_retrieval(snowflake,query)
-                # st.text(rag_retreival)
-                # web results are exeucted
-                # st.text("web search")
-                eurus.get_extracted_results(query)
-                root_directory = temp_path+"/"
-                # Walk through the directory
-                text_file_paths = []
-                for dirpath, dirnames, filenames in os.walk(root_directory):
-                    print(f"Checking {dirpath}...")
-                    for filename in filenames:
-                        print(f"Found file: {filename}")
-                        if filename.endswith('.txt'):
-                            file_path = os.path.join(dirpath, filename)
-                            text_file_paths.append(file_path)
-                            print(f"Processing file: {file_path}")
-                            # try:
-                            #     with open(file_path, 'r', encoding='utf-8') as file:
-                            #         content = file.read()
-                            #         with st.expander(f"File: {file_path}"):
-                            #             st.text(content)
-                            # except Exception as e:
-                            #     st.error(f"Error reading file {file_path}: {e}")
-                # st.text(text_file_paths)
-                # print(text_file_paths)
-                snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
-                # st.text("summarized texts")
-                summarize_folder_path = f"{temp_path}/summarize"
-                # for filename in os.listdir(summarize_folder_path):
-                #     file_path = os.path.join(summarize_folder_path, filename)
-                #     print(file_path)
-                #     if filename.endswith(".txt") and os.path.isfile(file_path):
-                #         with open(file_path, "r") as file:
-                #             content = file.read()
-                #             with st.expander(f"File:{file_path}"):
-                #                 st.text(content)
-                st.text("ranked documents")
-                with open(f"{summarize_folder_path}/rag.txt","w") as f:
-                    f.write(rag_retreival)
-                reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
-                # st.text(result)
-                # st.text("Final Responses")
-                final_responses = get_user_friendly_responses(snowflake,result[0:2])
-                # for i in final_responses:
-                #     st.text(i)
-                upload_files_to_snowflake(snowflake=snowflake,texts=result)
-                return final_responses
-                # st.text("files uploaded to snowflake")
-            except Exception as e:
-                st.text(e)
+    try:
+        # st.text("rag")
+        rag_retreival = snowflake_retrieval(snowflake,query)
+        # st.text(rag_retreival)
+        # web results are exeucted
+        # st.text("web search")
+        eurus.get_extracted_results(query)
+        root_directory = temp_path+"/"
+        # Walk through the directory
+        text_file_paths = []
+        for dirpath, dirnames, filenames in os.walk(root_directory):
+            print(f"Checking {dirpath}...")
+            for filename in filenames:
+                print(f"Found file: {filename}")
+                if filename.endswith('.txt'):
+                    file_path = os.path.join(dirpath, filename)
+                    text_file_paths.append(file_path)
+                    print(f"Processing file: {file_path}")
+                    # try:
+                    #     with open(file_path, 'r', encoding='utf-8') as file:
+                    #         content = file.read()
+                    #         with st.expander(f"File: {file_path}"):
+                    #             st.text(content)
+                    # except Exception as e:
+                    #     st.error(f"Error reading file {file_path}: {e}")
+        # st.text(text_file_paths)
+        # print(text_file_paths)
+        snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
+        # st.text("summarized texts")
+        summarize_folder_path = f"{temp_path}/summarize"
+        # for filename in os.listdir(summarize_folder_path):
+        #     file_path = os.path.join(summarize_folder_path, filename)
+        #     print(file_path)
+        #     if filename.endswith(".txt") and os.path.isfile(file_path):
+        #         with open(file_path, "r") as file:
+        #             content = file.read()
+        #             with st.expander(f"File:{file_path}"):
+        #                 st.text(content)
+        st.text("ranked documents")
+        with open(f"{summarize_folder_path}/rag.txt","w") as f:
+            f.write(rag_retreival)
+        reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
+        # st.text(result)
+        # st.text("Final Responses")
+        final_responses = get_user_friendly_responses(snowflake,result[0:2])
+        # for i in final_responses:
+        #     st.text(i)
+        upload_files_to_snowflake(snowflake=snowflake,texts=result)
+        return final_responses
+        # st.text("files uploaded to snowflake")
+    except Exception as e:
+        st.text(e)
 
 
 if 'messages' not in st.session_state:
