@@ -191,8 +191,9 @@ def main():
                     st.json(gsearch)
                 except Exception as e:
                     st.text("gsearch does not exist")
-                directories = [d for d in os.listdir(temp_path) if os.path.isdir(os.path.join("/path/to/directory", d))]
-                st.text(directories)
+                for root, dirs, files in os.walk(temp_path):
+                    for file in files:
+                        st.text(os.path.join(root, file))
             except Exception as e:
                 st.text(e)
 
