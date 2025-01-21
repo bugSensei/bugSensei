@@ -130,6 +130,7 @@ class TomsForumRunner:
                 print(
                     "TomsForumRunner : get_and_process_data() : Data Retrieved and Processed"
                 )
+                print(self.output_directory)
             except Exception as e:
                 raise Exception(
                     "TomsForumRunner : get_and_process_data() : failed to retrieve data"
