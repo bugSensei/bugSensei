@@ -182,7 +182,7 @@ def main():
         st.session_state.temp_dir = create_session_specific_temp_dir()
 
     # Display the path to verify
-    st.text(f"Temporary directory: {st.session_state.temp_dir}")
+    st.text(f"Temporary directory: {st.session_state}")
 
     # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
