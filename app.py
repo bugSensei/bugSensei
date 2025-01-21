@@ -224,7 +224,7 @@ def main():
                             with st.expander(f"File:{file_path}"):
                                 st.text(content)
                 st.text("ranked documents")
-                result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path)
+                result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
                 st.text(result)
             except Exception as e:
                 st.text(e)
