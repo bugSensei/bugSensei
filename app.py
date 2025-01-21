@@ -255,8 +255,9 @@ if prompt := st.chat_input("Enter your query"):
     with st.chat_message('assistant'):
         st.markdown(response2)
 
-    with st.modal("Take Action"):
-        st.code(code, language="powershell")
+    if st.button('Take Action'):
+        with st.expander("View Powershell Code"):
+            st.code(code, language="powershell")
 
     # if st.button("Take Action"):
     #     snowflake_two = Snowflake()
