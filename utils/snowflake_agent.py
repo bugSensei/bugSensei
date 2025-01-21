@@ -209,7 +209,7 @@ class Snowflake:
 
         try:
             self.cursor.execute(query)
-            return self.cursor.fetchone()[0].split("```")[1]
+            return self.cursor.fetchone()[0]
         except Exception as e:
             return f"Error: {e}"
             
