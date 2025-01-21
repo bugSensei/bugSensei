@@ -42,6 +42,14 @@ def rank_documents(snowflake, query,summarize_folder_path, temp_path):
 
     return reranked_file_path, texts
 
+def get_user_friendly_responses(snowflake, docs):
+    user_docs = []
+    for doc in docs:
+        user_doc = snowflake.get_user_friendly_responses(doc)
+        user_docs.append(user_doc)
+    return user_docs
+    #return snowflake.get_user_friendly_responses(query)
+
 def get_powershell_code(snowflake, query):
     return snowflake.get_powershell_code(query)
 

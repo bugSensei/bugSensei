@@ -327,6 +327,24 @@ class Snowflake:
             self.cursor.execute("DROP TABLE IF EXISTS temp_text_files;")
             print("Temporary table dropped.")
 
+    def get_user_friendly_documents(self, doc):
+        prompt = f"""
+            Based on the context: {doc}, create a clear, step-by-step guide for non-technical users. Break down the process into manageable steps.
+
+            User-Friendly Guide:
+        """
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.COMPLETE(
+                'mistral-large',
+                $$ {prompt} $$
+            ) AS REFINED_QUERY;
+        """
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0]
+        except Exception as e:
+            return f"Error: {e}"
+
 
 # example usage
 if __name__ == "__main__":
