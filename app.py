@@ -204,7 +204,7 @@ def main():
             st.text("Data Extracted")
 
             # Debug: Print the temp directory path
-            st.write(f"Temp Directory: {st.session_state.temp_dir}")
+            st.write(f"Temp Directory: {st.session_state}")
 
             # Check if the content directory exists
             content_dir = os.path.join(st.session_state.temp_dir, 'reddit')
