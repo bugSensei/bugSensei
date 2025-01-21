@@ -229,7 +229,7 @@ def main():
                 reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
                 st.text(result)
                 st.text("Final Responses")
-                final_responses = get_user_friendly_responses(result[0:2])
+                final_responses = get_user_friendly_responses(snowflake,result[0:2])
                 for i in final_responses:
                     st.text(i)
                 upload_files_to_snowflake(snowflake=snowflake,texts=result)
