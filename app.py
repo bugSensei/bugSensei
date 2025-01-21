@@ -248,16 +248,21 @@ if prompt := st.chat_input("Enter your query"):
 
     # Get two separate responses from the model using the generate_response function
     with st.spinner():
-        response1, response2, code = generate_responses(prompt)
+        response1, response2,code = generate_responses(prompt)
     with st.chat_message('assistant'):
         st.markdown(response1)
         st.session_state['response_1'] = response1
     with st.chat_message('assistant'):
         st.markdown(response2)
+    
+    st.text("Powershell Script")
+    st.code(code,language="powershell")
+    
+    # st.session_state['code'] = code
 
-    if st.button('Take Action'):
-        with st.expander("View Powershell Code"):
-            st.code(code, language="powershell")
+    # if st.button('Take Action'):
+    #     with st.expander("View Powershell Script"):
+    #         st.code(st.session_state['code'], language="powershell")
 
     # if st.button("Take Action"):
     #     snowflake_two = Snowflake()

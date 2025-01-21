@@ -233,6 +233,24 @@ class Snowflake:
         except Exception as e:
             return f"Error: {e}"
         
+    def get_prompt_for_powershell(self, question):
+        prompt = f"""
+            Generate a prompt to generate a powershell script for this task:
+            {question}
+        """
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.COMPLETE(
+                'mistral-large',
+                $$ {prompt} $$
+            ) AS REFINED_QUERY;
+        """
+
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0]
+        except Exception as e:
+            return f"Error: {e}"
+        
     def summarise(self, file_paths,temp_path):
         summary_folder = f"{temp_path}/summarize"
         os.makedirs(summary_folder, exist_ok=True)
