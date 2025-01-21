@@ -150,14 +150,14 @@ def generate_response(query):
                             file_path = os.path.join(dirpath, filename)
                             text_file_paths.append(file_path)
                             print(f"Processing file: {file_path}")
-                            try:
-                                with open(file_path, 'r', encoding='utf-8') as file:
-                                    content = file.read()
-                                    # with st.expander(f"File: {file_path}"):
-                                    #     st.text(content)
-                            except Exception as e:
-                                st.error(f"Error reading file {file_path}: {e}")
-                # st.text(text_file_paths)
+                            # try:
+                            #     with open(file_path, 'r', encoding='utf-8') as file:
+                            #         content = file.read()
+                            #         # with st.expander(f"File: {file_path}"):
+                            #         #     st.text(content)
+                            # except Exception as e:
+                            #     st.error(f"Error reading file {file_path}: {e}")
+                st.text(text_file_paths)
                 print(text_file_paths)
                 snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
                 # st.text("summarized texts")
@@ -165,9 +165,9 @@ def generate_response(query):
                 for filename in os.listdir(summarize_folder_path):
                     file_path = os.path.join(summarize_folder_path, filename)
                     print(file_path)
-                    if filename.endswith(".txt") and os.path.isfile(file_path):
-                        with open(file_path, "r") as file:
-                            content = file.read()
+                    # if filename.endswith(".txt") and os.path.isfile(file_path):
+                    #     with open(file_path, "r") as file:
+                    #         content = file.read()
                             # with st.expander(f"File:{file_path}"):
                             #     st.text(content)
                 # st.text("ranked documents")
