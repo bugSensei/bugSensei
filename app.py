@@ -191,19 +191,8 @@ def main():
                     st.json(gsearch)
                 except Exception as e:
                     st.text("gsearch does not exist")
-                for root, dirs, files in os.walk(temp_path):
-                    for file in files:
-                        if file.endswith(".json"):
-                            file_path = os.path.join(root, file)
-                            
-                            # Load and display the JSON content
-                            with open(file_path, "r") as f:
-                                try:
-                                    json_content = json.load(f)
-                                    st.subheader(f"Content of {file}:")
-                                    st.json(json_content)
-                                except json.JSONDecodeError:
-                                    st.error(f"Error decoding JSON in {file}")
+                directories = [d for d in os.listdir(temp_path) if os.path.isdir(os.path.join("/path/to/directory", d))]
+                st.text(directories)
             except Exception as e:
                 st.text(e)
 
