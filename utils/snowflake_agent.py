@@ -280,7 +280,7 @@ class Snowflake:
         except Exception as e:
             return f"Error: {e}"
 
-    def rerank_documents(self, search_query, top_k=3, file_dir='/content/output/summarize/'):
+    def rerank_documents(self, search_query,file_dir,top_k=3):
         try:
             self.cursor.execute("""
                 CREATE OR REPLACE TEMPORARY TABLE temp_text_files (

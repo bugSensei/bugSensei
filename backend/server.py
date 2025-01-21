@@ -30,8 +30,8 @@ def upload_files_to_snowflake(snowflake, dir_path):
     snowflake.upload_texts_to_snowflake(texts)
 
 
-def rank_documents(snowflake, query):
-    return snowflake.rerank_documents(query)
+def rank_documents(snowflake, query,summarize_folder_path):
+    return snowflake.rerank_documents(query,summarize_folder_path)
 
 def get_powershell_code(snowflake, query):
     return snowflake.get_powershell_code(query)
