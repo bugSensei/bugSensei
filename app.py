@@ -191,8 +191,8 @@ def main():
                     st.json(gsearch)
                 except Exception as e:
                     st.text("gsearch does not exist")
-                with open(f"{temp_path}/tomsforum/0.json") as f:
-                    st.json(json.load(f))
+                # with open(f"{temp_path}/tomsforum/0.json") as f:
+                #     st.json(json.load(f))
                 root_directory = temp_path+"/"
 
                 # Walk through the directory
