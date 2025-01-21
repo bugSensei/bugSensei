@@ -23,6 +23,7 @@ st.markdown(
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+
 [data-testid="stAppViewContainer"]{
 background-color:#f8f9fa;
 }
@@ -107,28 +108,6 @@ caret-color:black;
     unsafe_allow_html=True,
 )
 
-st.markdown('<div class="heading">BugSensei</div>', unsafe_allow_html=True)
-
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "assistant", "content": "Let's fix your computer, shall we?"}
-    ]
-
-st.markdown('<div class="chat-container">', unsafe_allow_html=True)
-
-for message in st.session_state.messages:
-    if message["role"] == "user":
-        st.markdown(
-            f'<div class="user-message">{message["content"]}</div>',
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            f'<div class="assistant-message">{message["content"]}</div>',
-            unsafe_allow_html=True,
-        )
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # does not have a trailing slash at the end
 def generate_temp_dir(): 
@@ -208,15 +187,38 @@ def generate_response(query):
             except Exception as e:
                 st.text(e)
 
-if prompt := st.chat_input("What is your issue?"):
+
+st.markdown('<div class="heading">BugSensei</div>', unsafe_allow_html=True)
+
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Let's fix your computer, shall we?"}
+    ]
+
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+
+for message in st.session_state.messages:
+    if message["role"] == "user":
+        st.markdown(
+            f'<div class="user-message">{message["content"]}</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(
+            f'<div class="assistant-message">{message["content"]}</div>',
+            unsafe_allow_html=True,
+        )
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+if prompt := st.chat_input("Type your message here..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     st.markdown(f'<div class="user-message">{prompt}</div>', unsafe_allow_html=True)
 
     with st.spinner():
-        full_response = generate_response(prompt)
+        full_response = generate_response()
     st.session_state.messages.append({"role": "assistant", "content": full_response})
     for i in full_response:
         st.markdown(
             f'<div class="assistant-message">{i}</div>', unsafe_allow_html=True
         )
-
