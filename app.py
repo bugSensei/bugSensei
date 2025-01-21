@@ -206,17 +206,16 @@ def main():
             # Debug: Print the temp directory path
             st.write(f"Temp Directory: {st.session_state.temp_dir}")
 
-            # List all files in the directory
-            try:
-                files_in_dir = os.listdir(st.session_state.temp_dir)
-                st.write("Files in directory:", files_in_dir)
-            except Exception as list_error:
-                st.error(f"Error listing directory contents: {list_error}")
+            # Check if the content directory exists
+            content_dir = os.path.join(st.session_state.temp_dir, 'content')
+            if not os.path.exists(content_dir):
+                st.warning(f"Content directory does not exist: {content_dir}")
+                return
 
-            # Recursive file search with debugging
+            # List all files in the content directory and its subdirectories
             json_files_found = []
             try:
-                for root, _, files in os.walk(st.session_state.temp_dir):
+                for root, _, files in os.walk(content_dir):
                     for file in files:
                         if file.endswith(".json"):
                             file_path = os.path.join(root, file)
@@ -227,7 +226,7 @@ def main():
 
                 # If no JSON files found
                 if not json_files_found:
-                    st.warning("No JSON files found in the directory")
+                    st.warning("No JSON files found in the content directory.")
 
                 # Read and display JSON files
                 for file_path in json_files_found:
@@ -240,7 +239,7 @@ def main():
                         st.error(f"Error reading {file_path}: {file_read_error}")
 
             except Exception as walk_error:
-                st.error(f"Error walking through directory: {walk_error}")
+                st.error(f"Error walking through content directory: {walk_error}")
 
         except Exception as e:
             st.error(f"An error occurred: {e}")
