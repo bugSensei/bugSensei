@@ -17,8 +17,9 @@ from backend.server import snowflake_retrieval,rank_documents,upload_files_to_sn
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
+st.title("BugSensei")
+st.set_page_config(page_title="BugSensei",layout="wide")
 
-# st.set_page_config(page_title="BugSensei", layout="wide")
 # client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
 
 # def run_mistral(user_message, model="mistral-large-latest"):
@@ -150,8 +151,7 @@ sys.path.append(".")  # necessary for importing files
 #         f'<div class="assistant-message">{full_response}</div>', unsafe_allow_html=True
 #     )
 
-# working commit - finally ##
-    # does not have a trailing slash at the end
+
 def generate_temp_dir(): 
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(uuid.uuid4())
@@ -162,21 +162,10 @@ def generate_temp_dir():
     # st.session_state.temp_dir = temp_path
     st.text(f"Temporary ID:{temp_path}")
     return temp_path
-# def destroy_temp_dir():
-#     if "temp_dir" in st.session_state and os.path.exists(st.session_state.temp_dir):
-#         shutil.rmtree(st.session_state.temp_dir)
-# st.session_state.on_session_end
-    # Your RedditRetriever setup
-    # reddit_retriever = RedditRetriever(
-    #     username=st.secrets["REDDIT_USERNAME"],
-    #     secret_key=st.secrets["REDDIT_SECRET_KEY"],
-    #     password=st.secrets["REDDIT_PASSWORD"],
-    #     client_id=st.secrets["REDDIT_CLIENT_ID"],
-    #     output_directory=temp_path,
-    # )
-    # stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
-def main():
-    st.title("Testing Model")
+
+
+def generate_responses(query):
+    
     temp_path = generate_temp_dir()
     eurus = Eurus(output_directory=temp_path)
     snowflake = Snowflake()
@@ -186,11 +175,11 @@ def main():
     #mc = Eurus(output_directory=temp_path)
     if st.button("Get Data"):
             try:
-                st.text("rag")
+                # st.text("rag")
                 rag_retreival = snowflake_retrieval(snowflake,query)
-                st.text(rag_retreival)
+                # st.text(rag_retreival)
                 # web results are exeucted
-                st.text("web search")
+                # st.text("web search")
                 eurus.get_extracted_results(query)
                 root_directory = temp_path+"/"
                 # Walk through the directory
@@ -203,39 +192,69 @@ def main():
                             file_path = os.path.join(dirpath, filename)
                             text_file_paths.append(file_path)
                             print(f"Processing file: {file_path}")
-                            try:
-                                with open(file_path, 'r', encoding='utf-8') as file:
-                                    content = file.read()
-                                    with st.expander(f"File: {file_path}"):
-                                        st.text(content)
-                            except Exception as e:
-                                st.error(f"Error reading file {file_path}: {e}")
-                st.text(text_file_paths)
-                print(text_file_paths)
+                            # try:
+                            #     with open(file_path, 'r', encoding='utf-8') as file:
+                            #         content = file.read()
+                            #         with st.expander(f"File: {file_path}"):
+                            #             st.text(content)
+                            # except Exception as e:
+                            #     st.error(f"Error reading file {file_path}: {e}")
+                # st.text(text_file_paths)
+                # print(text_file_paths)
                 snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
-                st.text("summarized texts")
+                # st.text("summarized texts")
                 summarize_folder_path = f"{temp_path}/summarize"
-                for filename in os.listdir(summarize_folder_path):
-                    file_path = os.path.join(summarize_folder_path, filename)
-                    print(file_path)
-                    if filename.endswith(".txt") and os.path.isfile(file_path):
-                        with open(file_path, "r") as file:
-                            content = file.read()
-                            with st.expander(f"File:{file_path}"):
-                                st.text(content)
+                # for filename in os.listdir(summarize_folder_path):
+                #     file_path = os.path.join(summarize_folder_path, filename)
+                #     print(file_path)
+                #     if filename.endswith(".txt") and os.path.isfile(file_path):
+                #         with open(file_path, "r") as file:
+                #             content = file.read()
+                #             with st.expander(f"File:{file_path}"):
+                #                 st.text(content)
                 st.text("ranked documents")
                 with open(f"{summarize_folder_path}/rag.txt","w") as f:
                     f.write(rag_retreival)
                 reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
-                st.text(result)
-                st.text("Final Responses")
+                # st.text(result)
+                # st.text("Final Responses")
                 final_responses = get_user_friendly_responses(snowflake,result[0:2])
-                for i in final_responses:
-                    st.text(i)
+                # for i in final_responses:
+                #     st.text(i)
                 upload_files_to_snowflake(snowflake=snowflake,texts=result)
-                st.text("files uploaded to snowflake")
+                return final_responses
+                # st.text("files uploaded to snowflake")
             except Exception as e:
                 st.text(e)
 
 
-main()
+if 'messages' not in st.session_state:
+    st.session_state['messages'] = []
+
+
+# update the interface with the previous messages
+for message in st.session_state['messages']:
+    with st.chat_message(message['role']):
+        st.markdown(message['content'])
+
+# create the chat interface
+if prompt := st.chat_input("Enter your query"):
+    # Add user's input to session messages
+    st.session_state['messages'].append({"role": "user", "content": prompt})
+    with st.chat_message('user'):
+        st.markdown(prompt)
+
+    # Get two separate responses from the model using the generate_response function
+    with st.chat_message('assistant'):
+        response1, response2 = generate_responses(prompt)
+        
+        # Display both responses as markdown
+        st.markdown(response1)
+        st.markdown(response2)
+    
+    # Add both responses to session messages
+    st.session_state['messages'].append({"role": "assistant", "content": f"{response1}\n\n{response2}"})
+
+
+
+    # handle message overflow based on the model size
