@@ -153,8 +153,8 @@ def generate_response(query):
                             try:
                                 with open(file_path, 'r', encoding='utf-8') as file:
                                     content = file.read()
-                                    with st.expander(f"File: {file_path}"):
-                                        st.text(content)
+                                    # with st.expander(f"File: {file_path}"):
+                                    #     st.text(content)
                             except Exception as e:
                                 st.error(f"Error reading file {file_path}: {e}")
                 # st.text(text_file_paths)
@@ -168,8 +168,8 @@ def generate_response(query):
                     if filename.endswith(".txt") and os.path.isfile(file_path):
                         with open(file_path, "r") as file:
                             content = file.read()
-                            with st.expander(f"File:{file_path}"):
-                                st.text(content)
+                            # with st.expander(f"File:{file_path}"):
+                            #     st.text(content)
                 # st.text("ranked documents")
                 with open(f"{summarize_folder_path}/rag.txt","w") as f:
                     f.write(rag_retreival)
