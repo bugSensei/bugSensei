@@ -31,7 +31,6 @@ And so, in bold attempt, we decided to develop BugSensei.
   - Decision Agent
   - codeShell
   
-<<<<<<< HEAD
   ### Web Search Agent
     - Codenamed as "Eurus", this agent is responsible for extracting data from the most relevant search
      results based off the user's query post query refinement.
@@ -47,18 +46,6 @@ And so, in bold attempt, we decided to develop BugSensei.
     - It retrieves pertinent data from the knowledge base based on the refined query and
      generates responses using the mistral-large based on the context recieved from the 
      similarity search of the embeddings
-=======
-  #### Web Search Agent
-  - Codenamed as "Eurus", this agent is responsible for extracting data from the most relevant search results based off the user's query post query refinement.
-  - This agent dynamically enlists bots under its management and retrieve data from websites.
-  - The data is then formatted to make LLM ready for contextual information and then dumped into separate folders.
-    
-  #### Snowflake Agent
-  - This agent is tasked with communicating with snowflake and with the other agents 
-  - It learns new information from the Web-Search agent and uploads acquired data to its knowledge base
-  - It also performs query refinement to ensure better results from cortex-search and web-search
-  - It retrieves pertinent data from the knowledge base based on the refined query and generates responses using the mistral-large based on the context recieved from the similarity search of the embeddings
->>>>>>> 4fad646232f9c949826b4dbcf8cdba2e95379042
 
   #### Decision Agent
   - It summarises all the generated documents and assigns a relevance score to each of the document based on its relevance to the query and re-ranks the document, the top ranked results are communicated to snowflake agent to update its knowledge base and the top result is used to generate powershell script by the codeshell agent
