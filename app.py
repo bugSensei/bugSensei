@@ -188,6 +188,24 @@ def main():
             try:
                 # web results are exeucted
                 eurus.get_extracted_results(query)
+                # input_dir = temp_path+"/"
+                # summarize_folder = input_dir+"summarize"
+                # tot=[]
+                # os.makedirs(summarize_folder, exist_ok=True)
+                # for i in os.walk(input_dir):
+                #     if i[2]:
+                #         for file in i[2]:
+                #             if file.endswith(".txt"):
+                #                 full_file_path = os.path.join(i[0], file)
+                #                 with open(full_file_path, 'r', encoding='utf-8') as file:
+                #                     content = file.read()
+                #                     with st.expander(f"File: {full_file_path}"):
+                #                         st.text(content)
+                #                 doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
+                #                 new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
+                #                 shutil.move(full_file_path, new_file_path)
+                #                 doc_map = (doc_id, new_file_path)
+                #                 tot.append(doc_map)
                 # gsearch = None
                 # mc.get_extracted_results(query)
                 # st.text("Data extracted")
@@ -199,25 +217,27 @@ def main():
                 #     st.text("gsearch does not exist")
                 # # with open(f"{temp_path}/tomsforum/0.json") as f:
                 # #     st.json(json.load(f))
-                # root_directory = temp_path+"/"
+                root_directory = temp_path+"/"
 
-                # # Walk through the directory
-                # for dirpath, dirnames, filenames in os.walk(root_directory):
-                #     print(f"Checking {dirpath}...")
-                #     for filename in filenames:
-                #         print(f"Found file: {filename}")
-                #         if filename.endswith('.txt'):
-                #             file_path = os.path.join(dirpath, filename)
-                #             print(f"Processing file: {file_path}")
-                #             try:
-                #                 with open(file_path, 'r', encoding='utf-8') as file:
-                #                     content = file.read()
-                #                     with st.expander(f"File: {file_path}"):
-                #                         st.text(content)
-                #             except json.JSONDecodeError:
-                #                 st.error(f"Invalid JSON format in file: {file_path}")
-                #             except Exception as e:
-                #                 st.error(f"Error reading file {file_path}: {e}")
+                # Walk through the directory
+                text_file_paths = []
+                for dirpath, dirnames, filenames in os.walk(root_directory):
+                    print(f"Checking {dirpath}...")
+                    for filename in filenames:
+                        print(f"Found file: {filename}")
+                        if filename.endswith('.txt'):
+                            file_path = os.path.join(dirpath, filename)
+                            text_file_paths.append(file_path)
+                            print(f"Processing file: {file_path}")
+                            try:
+                                with open(file_path, 'r', encoding='utf-8') as file:
+                                    content = file.read()
+                                    with st.expander(f"File: {file_path}"):
+                                        st.text(content)
+                            except Exception as e:
+                                st.error(f"Error reading file {file_path}: {e}")
+                st.text(text_file_paths)
+                print(text_file_paths)
              
             except Exception as e:
                 st.text(e)
