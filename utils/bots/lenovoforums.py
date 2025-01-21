@@ -19,8 +19,7 @@ class LenovoForum:
 
         # ensuring the directory exists
         self.output_directory = output_directory+"/lenovoforum"
-        if not os.path.exists(self.output_directory):
-            os.makedirs(self.output_directory)
+        os.makedirs(self.output_directory,exist_ok=True)
 
     def __del__(self):
         if self.driver:

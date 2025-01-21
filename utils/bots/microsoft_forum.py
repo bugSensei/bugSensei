@@ -21,8 +21,7 @@ class MicrosoftForum:
         options.add_argument("--diable-dve-shm-uage")
         self.driver = webdriver.Chrome(options=options)
         self.output_directory = output_directory+"/microsoftforum"
-        if not os.path.exists(self.output_directory):
-            os.makedirs(self.output_directory,exist_ok=True)
+        os.makedirs(self.output_directory,exist_ok=True)
 
     def get_data(self, url):
         try:
