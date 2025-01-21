@@ -14,12 +14,13 @@ But more than often answers related to troubleshooting computer issues  are ofte
 
 And so, in bold attempt, we decided to develop BugSensei. 
 
-[Streamlit App](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
+[![Streamlit Logo](https://raw.githubusercontent.com/streamlit/streamlit/develop/docs/img/streamlit-logo-dark.svg)](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
+
 
 ### Developed By
 
-[Anirudh A](https://github.com/AnirudhArrepu)
-[Niranjan M](https://github.com/all-coder)
+- [Anirudh A](https://github.com/AnirudhArrepu)
+- [Niranjan M](https://github.com/all-coder)
 
 ## Architecture
 
