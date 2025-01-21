@@ -13,6 +13,7 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
+from backend import server
 
 
 sys.path.append(".")  # necessary for importing files
@@ -165,9 +166,6 @@ def generate_temp_dir():
 #     if "temp_dir" in st.session_state and os.path.exists(st.session_state.temp_dir):
 #         shutil.rmtree(st.session_state.temp_dir)
 # st.session_state.on_session_end
-def main():
-    st.title("Testing Eurus")
-    temp_path = generate_temp_dir()
     # Your RedditRetriever setup
     # reddit_retriever = RedditRetriever(
     #     username=st.secrets["REDDIT_USERNAME"],
@@ -177,41 +175,48 @@ def main():
     #     output_directory=temp_path,
     # )
     # stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
+def main():
+    st.title("Testing Model")
+    temp_path = generate_temp_dir()
+    eurus = Eurus(output_directoru=temp_path)
+
     query = st.text_input("Enter the input", "")
 
-    mc = Eurus(output_directory=temp_path)
+    #mc = Eurus(output_directory=temp_path)
     if st.button("Get Data"):
             try:
-                gsearch = None
-                mc.get_extracted_results(query)
-                st.text("Data extracted")
-                try:
-                    with open(f"{temp_path}/gsearch.json", "r") as f:
-                        gsearch = json.load(f)
-                    st.json(gsearch)
-                except Exception as e:
-                    st.text("gsearch does not exist")
-                # with open(f"{temp_path}/tomsforum/0.json") as f:
-                #     st.json(json.load(f))
-                root_directory = temp_path+"/"
+                # web results are exeucted
+                eurus.get_extracted_results(query)
+                # gsearch = None
+                # mc.get_extracted_results(query)
+                # st.text("Data extracted")
+                # try:
+                #     with open(f"{temp_path}/gsearch.json", "r") as f:
+                #         gsearch = json.load(f)
+                #     st.json(gsearch)
+                # except Exception as e:
+                #     st.text("gsearch does not exist")
+                # # with open(f"{temp_path}/tomsforum/0.json") as f:
+                # #     st.json(json.load(f))
+                # root_directory = temp_path+"/"
 
-                # Walk through the directory
-                for dirpath, dirnames, filenames in os.walk(root_directory):
-                    print(f"Checking {dirpath}...")
-                    for filename in filenames:
-                        print(f"Found file: {filename}")
-                        if filename.endswith('.json'):
-                            file_path = os.path.join(dirpath, filename)
-                            print(f"Processing file: {file_path}")
-                            try:
-                                with open(file_path, 'r', encoding='utf-8') as file:
-                                    content = json.load(file)
-                                    with st.expander(f"File: {file_path}"):
-                                        st.json(content)
-                            except json.JSONDecodeError:
-                                st.error(f"Invalid JSON format in file: {file_path}")
-                            except Exception as e:
-                                st.error(f"Error reading file {file_path}: {e}")
+                # # Walk through the directory
+                # for dirpath, dirnames, filenames in os.walk(root_directory):
+                #     print(f"Checking {dirpath}...")
+                #     for filename in filenames:
+                #         print(f"Found file: {filename}")
+                #         if filename.endswith('.txt'):
+                #             file_path = os.path.join(dirpath, filename)
+                #             print(f"Processing file: {file_path}")
+                #             try:
+                #                 with open(file_path, 'r', encoding='utf-8') as file:
+                #                     content = file.read()
+                #                     with st.expander(f"File: {file_path}"):
+                #                         st.text(content)
+                #             except json.JSONDecodeError:
+                #                 st.error(f"Invalid JSON format in file: {file_path}")
+                #             except Exception as e:
+                #                 st.error(f"Error reading file {file_path}: {e}")
              
             except Exception as e:
                 st.text(e)
