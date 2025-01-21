@@ -30,8 +30,17 @@ def upload_files_to_snowflake(snowflake, dir_path):
     snowflake.upload_texts_to_snowflake(texts)
 
 
-def rank_documents(snowflake, query,summarize_folder_path):
-    return snowflake.rerank_documents(query,summarize_folder_path)
+def rank_documents(snowflake, query,summarize_folder_path, temp_path):
+    texts = snowflake.rerank_documents(query,summarize_folder_path)
+    
+    reranked_file_path = f"{temp_path}/reranked"
+    os.makedirs(reranked_file_path, exist_ok=True)
+
+    for i, text in enumerate(texts):
+        with open(f"{reranked_file_path}/reranked_{i}.txt", "w") as f:
+            f.write(text)
+
+    return reranked_file_path
 
 def get_powershell_code(snowflake, query):
     return snowflake.get_powershell_code(query)
