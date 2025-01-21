@@ -13,11 +13,12 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
-from backend.server import snowflake_retrieval,rank_documents,upload_files_to_snowflake,get_user_friendly_responses
+from backend.server import snowflake_retrieval,rank_documents,upload_files_to_snowflake,get_user_friendly_responses,get_powershell_code
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
 st.title("BugSensei")
+index=0
 # st.set_page_config(page_title="BugSensei",layout="wide")
 
 # client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
@@ -160,12 +161,12 @@ def generate_temp_dir():
     temp_path = current_dir+f"/{st.session_state.session_id}"
     os.makedirs(temp_path,exist_ok=True)
     # st.session_state.temp_dir = temp_path
-    st.text(f"Temporary ID:{temp_path}")
+    # st.text(f"Temporary ID:{temp_path}")
     return temp_path
 
 
 def generate_responses(query):
-    
+        
     temp_path = generate_temp_dir()
     eurus = Eurus(output_directory=temp_path)
     snowflake = Snowflake()
@@ -211,7 +212,7 @@ def generate_responses(query):
         #             content = file.read()
         #             with st.expander(f"File:{file_path}"):
         #                 st.text(content)
-        st.text("ranked documents")
+        # st.text("ranked documents")
         with open(f"{summarize_folder_path}/rag.txt","w") as f:
             f.write(rag_retreival)
         reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
@@ -244,12 +245,19 @@ if prompt := st.chat_input("Enter your query"):
         st.markdown(prompt)
 
     # Get two separate responses from the model using the generate_response function
-    with st.chat_message('assistant'):
+    with st.spinner():
         response1, response2 = generate_responses(prompt)
-        
-        # Display both responses as markdown
+    with st.chat_message('assistant'):
         st.markdown(response1)
+    with st.chat_message('assistant'):
         st.markdown(response2)
+    if(index==0):
+        if st.button("Take Action"):
+            snowflake_two = Snowflake()
+            response = get_powershell_code(snowflake=snowflake_two,query=response1)
+            st.code(response,language="powershell")
+            index+=1
+
     
     # Add both responses to session messages
     st.session_state['messages'].append({"role": "assistant", "content": f"{response1}\n\n{response2}"})
