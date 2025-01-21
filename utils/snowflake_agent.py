@@ -181,6 +181,30 @@ class Snowflake:
         except Exception as e:
             return f"Error: {e}"
 
+    def get_powershell_code(self, myquestion):
+        prompt = f"""
+                Write a powershell script based on the Input (Task Description) given.
+
+                ### Input (Task Description):
+                {myquestion}
+
+                ### Output (PowerShell Code):
+                
+        """
+
+        query = f"""
+            SELECT SNOWFLAKE.CORTEX.COMPLETE(
+                'mistral-large',
+                $$ {prompt} $$
+            ) AS REFINED_QUERY;
+        """
+
+        try:
+            self.cursor.execute(query)
+            return self.cursor.fetchone()[0].split("```")[1]
+        except Exception as e:
+            return f"Error: {e}"
+
     def summarise(self, input_dir="/content/output/"):
         summarize_folder = input_dir+"summarize"
         os.makedirs(summarize_folder, exist_ok=True)
