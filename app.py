@@ -161,6 +161,7 @@ def main():
 
         temp_dir = tempfile.mkdtemp(dir=content_dir)  # Create a unique temporary directory within './content'
         st.session_state.temp_dir = temp_dir
+    st.text(st.session_state.temp_dir)
     reddit_retriever = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
@@ -177,6 +178,8 @@ def main():
     if st.button("Get Data"):
         try:
             reddit_retriever.get_and_process_data([query])
+            st.text("Data Extracted")
+            st.code()
             for root,_, files in os.walk(st.session_state.temp_dir):
                 for file in files:
                     if file.endswith(".json"):
