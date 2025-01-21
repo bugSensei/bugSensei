@@ -226,7 +226,7 @@ def main():
                 st.text("ranked documents")
                 reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
                 st.text(result)
-                upload_files_to_snowflake(snowflake=snowflake,dir_path=reranked_file_path)
+                upload_files_to_snowflake(snowflake=snowflake,texts=result)
                 st.text("files uploaded to snowflake")
             except Exception as e:
                 st.text(e)
