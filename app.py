@@ -176,7 +176,7 @@ def main():
 
     if st.button("Get Data"):
         try:
-            stackexchange.get_extracted_results([query])
+            reddit_retriever.get_and_process_data([query])
             for root,_, files in os.walk(st.session_state.temp_dir):
                 for file in files:
                     if file.endswith(".json"):
