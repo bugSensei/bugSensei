@@ -106,8 +106,8 @@ class Eurus:
     def getTavily(self, query):
         tavily_client = TavilyClient(api_key=st.secrets["TAVILY_API_KEY"])
         response = tavily_client.search(query, max_results=10)
-        with open("./output/gsearch.json", "w") as f:
-            json.dump(response["results"], f, indent=3)
+        # with open(f"{self.output_directory}/gsearch.json", "w") as f:
+        #     json.dump(response["results"], f, indent=3)
         return response["results"]
 
     # direct method to extract the search results and dump it onto a json file
