@@ -222,6 +222,8 @@ def generate_responses(query):
         # for i in final_responses:
         #     st.text(i)
         upload_files_to_snowflake(snowflake=snowflake,texts=result)
+        code = get_powershell_code(snowflake=snowflake,query=final_responses[0])
+        final_responses.append(code)
         return final_responses
         # st.text("files uploaded to snowflake")
     except Exception as e:
@@ -246,17 +248,20 @@ if prompt := st.chat_input("Enter your query"):
 
     # Get two separate responses from the model using the generate_response function
     with st.spinner():
-        response1, response2 = generate_responses(prompt)
+        response1, response2, code = generate_responses(prompt)
     with st.chat_message('assistant'):
         st.markdown(response1)
     with st.chat_message('assistant'):
         st.markdown(response2)
 
-    if st.button("Take Action"):
-        snowflake_two = Snowflake()
-        with st.spinner():
-            response = get_powershell_code(snowflake=snowflake_two,query=response1)
-        st.code(response,language="powershell")
+    with st.modal("Take Action"):
+        st.code(code, language="powershell")
+
+    # if st.button("Take Action"):
+    #     snowflake_two = Snowflake()
+    #     with st.spinner():
+    #         response = get_powershell_code(snowflake=snowflake_two,query=response1)
+    #     st.code(response,language="powershell")
 
     
     # Add both responses to session messages
