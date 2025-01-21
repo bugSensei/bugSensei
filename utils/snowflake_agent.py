@@ -142,7 +142,7 @@ class Snowflake:
             "relative_path",
         ]
         prompt_context = svc.search(myquestion, COLUMNS, limit=5).json()
-
+        print(prompt_context)
         
         prompt = f"""
            You are an expert chat assistance that extracs information from the CONTEXT provided

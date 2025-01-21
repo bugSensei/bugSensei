@@ -13,7 +13,7 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
-from backend.server import snowflake_retrieval,rank_documents,upload_files_to_snowflake
+from backend.server import snowflake_retrieval,rank_documents,upload_files_to_snowflake,get_user_friendly_responses
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
@@ -224,9 +224,15 @@ def main():
                             with st.expander(f"File:{file_path}"):
                                 st.text(content)
                 st.text("ranked documents")
+                with open(f"{summarize_folder_path}/rag.txt","w") as f:
+                    f.write(rag_retreival)
                 reranked_file_path,result = rank_documents(snowflake=snowflake,query=query,summarize_folder_path=summarize_folder_path,temp_path=temp_path)
                 st.text(result)
-                upload_files_to_snowflake(snowflake=snowflake,dir_path=reranked_file_path)
+                st.text("Final Responses")
+                final_responses = get_user_friendly_responses(snowflake,result[0:2])
+                for i in final_responses:
+                    st.text(i)
+                upload_files_to_snowflake(snowflake=snowflake,texts=result)
                 st.text("files uploaded to snowflake")
             except Exception as e:
                 st.text(e)

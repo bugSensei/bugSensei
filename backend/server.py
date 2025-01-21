@@ -20,25 +20,25 @@ def query_refiner(snowflake, search_query):
     refined_query = snowflake.query_refiner(search_query)
     return refined_query
 
-def upload_files_to_snowflake(snowflake, dir_path):
-    texts = []
-    for file in os.listdir(dir_path):
-        with open(os.path.join(dir_path, file), 'r') as f:
-            text = f.read()
-            texts.append(text)
-            
+def upload_files_to_snowflake(snowflake,texts):
+    # for file in os.listdir(dir_path):
+    #     with open(os.path.join(dir_path, file), 'r') as f:
+    #         text = f.read()
+    #         texts.append(text)  
     snowflake.upload_texts_to_snowflake(texts)
 
 
 def rank_documents(snowflake, query,summarize_folder_path, temp_path):
     texts = snowflake.rerank_documents(query,summarize_folder_path)
+    only_texts = []
     reranked_file_path = f"{temp_path}/reranked"
     os.makedirs(reranked_file_path, exist_ok=True)
     print("ranked documents")
     for i, text in enumerate(texts):
         with open(f"{reranked_file_path}/reranked_{i}.txt", "w") as f:
+            only_texts.append(text[1])
             f.write(text[1])
-    return reranked_file_path,texts
+    return reranked_file_path,only_texts
 
 def get_user_friendly_responses(snowflake, docs):
     user_docs = []
