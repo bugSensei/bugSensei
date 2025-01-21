@@ -18,7 +18,7 @@ from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
 st.title("BugSensei")
-st.set_page_config(page_title="BugSensei",layout="wide")
+# st.set_page_config(page_title="BugSensei",layout="wide")
 
 # client = Mistral(api_key=st.secrets['MISTRAL_API_KEY'])
 
