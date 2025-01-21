@@ -251,6 +251,7 @@ if prompt := st.chat_input("Enter your query"):
         response1, response2, code = generate_responses(prompt)
     with st.chat_message('assistant'):
         st.markdown(response1)
+        st.session_state['response_1'] = response1
     with st.chat_message('assistant'):
         st.markdown(response2)
 
