@@ -4,6 +4,23 @@
   <img src="assets/logo.jpeg" alt="Logo" width="200">
 </p>
 
+## Overview
+
+Ever felt frustrated with issues you faced with your computer? Be it software or hardware, solving these issues entirely on your own is a tedious process. And when you do call tech support, you are left more frustrated than ever due to  bad customer service and lack of proper technical support.
+
+More than often, solutions to these problems could be found through extensive google search and reading several websites and user manuals. But this is an extremely unpleasant process and often leaves a bad taste, but in this era of LLMs,  one might say why not use ChatGPT? 
+
+But more than often answers related to troubleshooting computer issues  are often generic and not quite specific to the issue in hand.
+
+And so, in bold attempt, we decided to develop BugSensei. 
+
+[Streamlit App](https://bugsensei-7arergvxfiffv6rxxtlvqx.streamlit.app/)
+
+### Developed By
+
+[Anirudh A](https://github.com/AnirudhArrepu)
+[Niranjan M](https://github.com/all-coder)
+
 ## Architecture
 
 ![alt text](assets/architecture.jpg)
