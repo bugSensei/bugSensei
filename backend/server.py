@@ -13,8 +13,8 @@ def web_search(snowflake, search_query,eurus,temp_path):
     snowflake.summarise(temp_path + "/")
 
 def snowflake_retrieval(snowflake, search_query):
-    snowflake.get_answer_from_rag(search_query)
-    return snowflake.get_answer_from_rag(search_query)
+    response = snowflake.get_answer_from_rag(search_query)
+    return response
 
 def query_refiner(snowflake, search_query):
     refined_query = snowflake.query_refiner(search_query)

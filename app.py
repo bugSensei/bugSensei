@@ -13,7 +13,7 @@ from utils.bots.microsoft_forum import MicrosoftForum
 from utils.bots.amd_community import AmdCommunity
 from utils.bots.tomsforum import TomsForumRunner
 from utils.bots.lenovoforums import LenovoForum
-# from backend import *
+from backend import snowflake_retrieval
 from utils.snowflake_agent import Snowflake
 
 sys.path.append(".")  # necessary for importing files
@@ -186,69 +186,42 @@ def main():
     #mc = Eurus(output_directory=temp_path)
     if st.button("Get Data"):
             try:
-                # web results are exeucted
-                eurus.get_extracted_results(query)
-                # input_dir = temp_path+"/"
-                # summarize_folder = input_dir+"summarize"
-                # tot=[]
-                # os.makedirs(summarize_folder, exist_ok=True)
-                # for i in os.walk(input_dir):
-                #     if i[2]:
-                #         for file in i[2]:
-                #             if file.endswith(".txt"):
-                #                 full_file_path = os.path.join(i[0], file)
-                #                 with open(full_file_path, 'r', encoding='utf-8') as file:
+                response = snowflake_retrieval(snowflake,query)
+                st.text(response)
+                # # web results are exeucted
+                # eurus.get_extracted_results(query)
+                # root_directory = temp_path+"/"
+                # # Walk through the directory
+                # text_file_paths = []
+                # for dirpath, dirnames, filenames in os.walk(root_directory):
+                #     print(f"Checking {dirpath}...")
+                #     for filename in filenames:
+                #         print(f"Found file: {filename}")
+                #         if filename.endswith('.txt'):
+                #             file_path = os.path.join(dirpath, filename)
+                #             text_file_paths.append(file_path)
+                #             print(f"Processing file: {file_path}")
+                #             try:
+                #                 with open(file_path, 'r', encoding='utf-8') as file:
                 #                     content = file.read()
-                #                     with st.expander(f"File: {full_file_path}"):
+                #                     with st.expander(f"File: {file_path}"):
                 #                         st.text(content)
-                #                 doc_id = i[0].split("/")[-1] + "_" + file.split(".")[0]
-                #                 new_file_path = os.path.join(summarize_folder, doc_id + ".txt")
-                #                 shutil.move(full_file_path, new_file_path)
-                #                 doc_map = (doc_id, new_file_path)
-                #                 tot.append(doc_map)
-                # gsearch = None
-                # mc.get_extracted_results(query)
-                # st.text("Data extracted")
-                # try:
-                #     with open(f"{temp_path}/gsearch.json", "r") as f:
-                #         gsearch = json.load(f)
-                #     st.json(gsearch)
-                # except Exception as e:
-                #     st.text("gsearch does not exist")
-                # # with open(f"{temp_path}/tomsforum/0.json") as f:
-                # #     st.json(json.load(f))
-                root_directory = temp_path+"/"
-
-                # Walk through the directory
-                text_file_paths = []
-                for dirpath, dirnames, filenames in os.walk(root_directory):
-                    print(f"Checking {dirpath}...")
-                    for filename in filenames:
-                        print(f"Found file: {filename}")
-                        if filename.endswith('.txt'):
-                            file_path = os.path.join(dirpath, filename)
-                            text_file_paths.append(file_path)
-                            print(f"Processing file: {file_path}")
-                            try:
-                                with open(file_path, 'r', encoding='utf-8') as file:
-                                    content = file.read()
-                                    with st.expander(f"File: {file_path}"):
-                                        st.text(content)
-                            except Exception as e:
-                                st.error(f"Error reading file {file_path}: {e}")
-                st.text(text_file_paths)
-                print(text_file_paths)
-                snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
-                st.text("summarized texts")
-                summarize_folder_path = f"{temp_path}/summarize"
-                for filename in os.listdir(summarize_folder_path):
-                    file_path = os.path.join(summarize_folder_path, filename)
-                    print(file_path)
-                    if filename.endswith(".txt") and os.path.isfile(file_path):
-                        with open(file_path, "r") as file:
-                            content = file.read()
-                            with st.expander(f"File:{file_path}"):
-                                st.text(content)
+                #             except Exception as e:
+                #                 st.error(f"Error reading file {file_path}: {e}")
+                # st.text(text_file_paths)
+                # print(text_file_paths)
+                # snowflake.summarise(file_paths=text_file_paths,temp_path=temp_path)
+                # st.text("summarized texts")
+                # summarize_folder_path = f"{temp_path}/summarize"
+                # for filename in os.listdir(summarize_folder_path):
+                #     file_path = os.path.join(summarize_folder_path, filename)
+                #     print(file_path)
+                #     if filename.endswith(".txt") and os.path.isfile(file_path):
+                #         with open(file_path, "r") as file:
+                #             content = file.read()
+                #             with st.expander(f"File:{file_path}"):
+                #                 st.text(content)
+                
             except Exception as e:
                 st.text(e)
 
