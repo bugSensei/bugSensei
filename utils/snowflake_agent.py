@@ -196,7 +196,7 @@ class Snowflake:
                 ### Input (Task Description):
                 {myquestion}
 
-                ### Output (PowerShell Code):
+                ### Output (PowerShell Code):
                 
         """
 
