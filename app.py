@@ -155,24 +155,34 @@ def main():
     # st.text(st.secrets["REDDIT_SECRET_KEY"])
     # st.text(st.secrets["REDDIT_PASSWORD"],)
     # st.text()
-    current_cwd = os.getcwd()
 
-    # Define the base directory where temporary files will be stored
-    base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './content' under the CWD
 
-    # Create a unique temporary directory under the current working directory
-    if 'temp_dir' not in st.session_state:
-        temp_base_dir = tempfile.mkdtemp(dir=base_dir)  # Create a temp directory under './content'
-        content_dir = os.path.join(temp_base_dir, 'content')  # Create 'content' under the temp directory
+    def create_session_specific_temp_dir():
+        # Get the current working directory
+        current_cwd = os.getcwd()
+
+        # Define the base directory where temporary files will be stored
+        base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './temp_dir' under the CWD
+
+        # Ensure the base directory exists
+        os.makedirs(base_dir, exist_ok=True)
+
+        # Create a unique temporary directory for this session
+        session_temp_dir = tempfile.mkdtemp(dir=base_dir, prefix=f'session_{id(st.session_state)}_')
         
-        # Ensure 'content' directory exists
+        # Create a 'content' subdirectory within the session-specific temp directory
+        content_dir = os.path.join(session_temp_dir, 'content')
         os.makedirs(content_dir, exist_ok=True)
 
-        # Store the path in session state
-        st.session_state.temp_dir = content_dir
+        return content_dir
 
-    # Display the path to ensure it's correct
-    st.text(st.session_state.temp_dir)
+    # Check if temp_dir is not already in session state
+    if 'temp_dir' not in st.session_state:
+        # Create a session-specific temporary directory
+        st.session_state.temp_dir = create_session_specific_temp_dir()
+
+    # Display the path to verify
+    st.text(f"Temporary directory: {st.session_state.temp_dir}")
 
     # Your RedditRetriever setup
     reddit_retriever = RedditRetriever(
