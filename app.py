@@ -154,16 +154,17 @@ sys.path.append(".")  # necessary for importing files
 def generate_temp_dir(): 
     if "session_id" not in st.session_state:
         st.session_state.session_id = str(uuid.uuid4())
-    st.text(f"Temporary ID: {st.session_state.session_id}")
+    # st.text(f"Temporary ID: {st.session_state.session_id}")
     current_dir = os.getcwd()
-    temp_path = current_dir+f"/{st.session_state.session_id}/content"
+    temp_path = current_dir+f"/{st.session_state.session_id}"
     os.makedirs(temp_path,exist_ok=True)
-    st.session_state.temp_dir = temp_path
+    # st.session_state.temp_dir = temp_path
+    st.text(f"Temporary ID:{temp_path}")
     return temp_path
-def destroy_temp_dir():
-    if "temp_dir" in st.session_state and os.path.exists(st.session_state.temp_dir):
-        shutil.rmtree(st.session_state.temp_dir)
-st.session_state.on_session_end
+# def destroy_temp_dir():
+#     if "temp_dir" in st.session_state and os.path.exists(st.session_state.temp_dir):
+#         shutil.rmtree(st.session_state.temp_dir)
+# st.session_state.on_session_end
 def main():
     st.title("Testing Eurus")
     temp_path = generate_temp_dir()
