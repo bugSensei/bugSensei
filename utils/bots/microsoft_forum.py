@@ -12,7 +12,7 @@ from selenium import webdriver
 
 
 class MicrosoftForum:
-    def __init__(self, output_directory="./content/output/microsoftforum"):
+    def __init__(self, output_directory):
         # for linux based subsystems(debian)
         options = webdriver.ChromeOptions()
         options.add_argument("--no-sandbox")

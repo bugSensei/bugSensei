@@ -3,7 +3,7 @@ import json
 import requests
 
 class StackExchangeRetriever:
-    def __init__(self,access_token,secret_key,output_directory="./content/output/stackexchange"):
+    def __init__(self,access_token,secret_key,output_directory):
         # use .env file for storing the access token and the secret key
         # could also access stackexchange api without access token, but requests are limited
         # with access tokens, request rate limit is upto ~ 10,000/day
