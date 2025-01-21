@@ -128,9 +128,8 @@ class TomsForumRunner:
                 for i in range(len(urls)):
                     self.run_spider(TomsForum, file_index=i, start_url=urls[i])
                 print(
-                    "TomsForumRunner : get_and_process_data() : Data Retrieved and Processed"
+                    "TomsForumRunner : get_and_process_data() : Data Retrieved and Processed : ",self.output_directory
                 )
-                print(self.output_directory)
             except Exception as e:
                 raise Exception(
                     "TomsForumRunner : get_and_process_data() : failed to retrieve data"
