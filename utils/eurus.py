@@ -186,7 +186,7 @@ class Eurus:
                 stackexchange_retriever = StackExchangeRetriever(
                     access_token=st.secrets["STACK_EXCHANGE_ACCESS_TOKEN"],
                     secret_key=st.secrets["STACK_EXCHANGE_SECRET_KEY"],
-                    output_directory=self.output_directory
+                    output_directory=self.output_directory,
                 )
             if len(mapped_urls.get("reddit", [])) != 0:
                 reddit_retriever = RedditRetriever(
@@ -194,46 +194,57 @@ class Eurus:
                     password=st.secrets["REDDIT_PASSWORD"],
                     secret_key=st.secrets["REDDIT_SECRET_KEY"],
                     client_id=st.secrets["REDDIT_CLIENT_ID"],
-                    output_directory=self.output_directory
+                    output_directory=self.output_directory,
                 )
             if len(mapped_urls.get("tomsforum", [])) != 0:
-                tomsforum_retriever = TomsForumRunner(output_directory=self.output_directory)
+                tomsforum_retriever = TomsForumRunner(
+                    output_directory=self.output_directory
+                )
             if len(mapped_urls["answers_microsoft"]) != 0:
-                answers_microsoft_retriever = MicrosoftForum(output_directory=self.output_directory)
+                answers_microsoft_retriever = MicrosoftForum(
+                    output_directory=self.output_directory
+                )
             if len(mapped_urls["amdforum"]) != 0:
-                amdforum_retriever = AmdCommunity(output_directory=self.output_directory)
+                amdforum_retriever = AmdCommunity(
+                    output_directory=self.output_directory
+                )
             if len(mapped_urls["lenovoforum"]) != 0:
-                lenovoforum_retriever = LenovoForum(output_directory=self.output_directory)
+                lenovoforum_retriever = LenovoForum(
+                    output_directory=self.output_directory
+                )
 
             # a list containing all the functions to be executed concurrently
             # tasks = []
-    
 
-        def run_retriever(retriever, url, source_name):
-            try:
-                if retriever:
-                    retriever.get_and_process_data(url)
-                print(f"{source_name} successfully retrieved data")
-            except Exception as e:
-                print(f"{source_name} failed to retrieve data: {e}")
-
-        # Map retrievers and their sources
-        retrievers = [
-            (stackexchange_retriever, mapped_urls.get("stackexchange"), "StackExchange"),
-            (reddit_retriever, mapped_urls.get("reddit"), "Reddit"),
-            (tomsforum_retriever, mapped_urls.get("tomsforum"), "Tom's Hardware"),
-            (answers_microsoft_retriever, mapped_urls.get("answers_microsoft"), "Microsoft Community"),
-            (amdforum_retriever, mapped_urls.get("amdforum"), "AMD Forum"),
-        ]
-
-        with ThreadPoolExecutor() as executor:
-            futures = [
-                executor.submit(run_retriever, retriever, url, source_name)
-                for retriever, url, source_name in retrievers
-            ]
-
-            for future in as_completed(futures):
-                future.result() 
+        try:
+            if stackexchange_retriever:
+                stackexchange_retriever.get_and_process_data(
+                    mapped_urls["stackexchange"]
+                )
+        except Exception as e:
+            print("StackExchange Failed to retrieve Data")
+        try:
+            if reddit_retriever:
+                reddit_retriever.get_and_process_data(mapped_urls["reddit"])
+        except Exception as e:
+            print("Reddit Failed to retrieve data")
+        try:
+            if tomsforum_retriever:
+                tomsforum_retriever.get_and_process_data(mapped_urls["tomsforum"])
+        except Exception as e:
+            print("Tom's Hardware Failed to extract data")
+        try:
+            if answers_microsoft_retriever:
+                answers_microsoft_retriever.get_and_process_data_multiple(
+                    mapped_urls["answers_microsoft"]
+                )
+        except Exception as e:
+            print("Microsoft Community Failed to Extract Data")
+        try:
+            if amdforum_retriever:
+                amdforum_retriever.get_and_process_data(mapped_urls["amdforum"])
+        except Exception as e:
+            print("Amd Forum failed to extract data")
 
             # try:
             #     if lenovoforum_retriever:
