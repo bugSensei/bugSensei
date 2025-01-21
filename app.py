@@ -3,6 +3,7 @@ import streamlit as st
 from mistralai import Mistral
 import sys
 import json
+import tempfile
 
 from utils.eurus import Eurus
 from utils.bots.reddit import RedditRetriever
@@ -149,27 +150,34 @@ sys.path.append(".")  # necessary for importing files
 
 # working commit - finally ##
 def main():
-    st.title("Checking Eurus")
+    st.title("Testing Eurus")
     # st.text(st.secrets['REDDIT_USERNAME'])
     # st.text(st.secrets["REDDIT_SECRET_KEY"])
     # st.text(st.secrets["REDDIT_PASSWORD"],)
     # st.text()
-    os.makedirs(os.path.join(os.getcwd(), 'content', 'output', 'reddit'), exist_ok=True)
+    if 'temp_dir' not in st.session_state:
+        content_dir = os.path.join(os.getcwd(), 'content')  # Path for storing temp directories
+        os.makedirs(content_dir, exist_ok=True)  # Ensure the content directory exists
+
+        temp_dir = tempfile.mkdtemp(dir=content_dir)  # Create a unique temporary directory within './content'
+        st.session_state.temp_dir = temp_dir
     reddit_retriever = RedditRetriever(
         username=st.secrets["REDDIT_USERNAME"],
         secret_key=st.secrets["REDDIT_SECRET_KEY"],
         password=st.secrets["REDDIT_PASSWORD"],
-        client_id=st.secrets["REDDIT_CLIENT_ID"]
+        client_id=st.secrets["REDDIT_CLIENT_ID"],
+        output_directory=st.session_state.temp_dir
+        
     )
     stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
-    mc = Eurus()
+    # mc = Eurus()
 
     if st.button("Get Data"):
         try:
-            mc.get_extracted_results(query)
-            for root, dirs, files in os.walk("./content/output"):
+            stackexchange.get_extracted_results([query])
+            for root,_, files in os.walk(st.session_state.temp_dir):
                 for file in files:
                     if file.endswith(".json"):
                         file_path = os.path.join(root, file)
