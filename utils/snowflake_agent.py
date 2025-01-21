@@ -190,22 +190,20 @@ class Snowflake:
             return f"Error: {e}"
 
     def get_powershell_code(self, myquestion):
-        # prompt = f"""
-        #         Write a powershell script based on the Input (Task Description) given.
-
-        #         ### Input (Task Description):
-        #         {myquestion}
-
-        #         ### Output (PowerShell Code):
-                
-        # """
-
         prompt = self.get_prompt_for_powershell(myquestion)
+        final_prompt = f"""
+                Write a powershell script based on the Input (Task Description) given.
 
+                ### Input (Task Description):
+                {prompt}
+
+                ### Output (PowerShell Code):
+                
+        """
         query = f"""
             SELECT SNOWFLAKE.CORTEX.COMPLETE(
                 'mistral-large',
-                $$ {prompt} $$
+                $$ {final_prompt} $$
             ) AS REFINED_QUERY;
         """
 
@@ -214,28 +212,10 @@ class Snowflake:
             return self.cursor.fetchone()[0].split("```")[1]
         except Exception as e:
             return f"Error: {e}"
-        
+            
     def get_prompt_for_powershell(self, question):
         prompt = f"""
-            Generate a prompt to generate a powershell script for this task:
-            {question}
-        """
-        query = f"""
-            SELECT SNOWFLAKE.CORTEX.COMPLETE(
-                'mistral-large',
-                $$ {prompt} $$
-            ) AS REFINED_QUERY;
-        """
-
-        try:
-            self.cursor.execute(query)
-            return self.cursor.fetchone()[0].split("```")[1]
-        except Exception as e:
-            return f"Error: {e}"
-        
-    def get_prompt_for_powershell(self, question):
-        prompt = f"""
-            Generate a prompt to generate a powershell script for this task:
+            Generate a prompt to generate a powershell script for this response:
             {question}
         """
         query = f"""
