@@ -3,8 +3,8 @@ import streamlit as st
 from mistralai import Mistral
 import sys
 import json
-import tempfile
 import uuid
+import shutil
 
 from utils.eurus import Eurus
 from utils.bots.reddit import RedditRetriever
@@ -150,63 +150,38 @@ sys.path.append(".")  # necessary for importing files
 #     )
 
 # working commit - finally ##
+    # does not have a trailing slash at the end
+def generate_temp_dir(): 
+    if "session_id" not in st.session_state:
+        st.session_state.session_id = str(uuid.uuid4())
+    st.text(f"Temporary ID: {st.session_state.session_id}")
+    current_dir = os.getcwd()
+    temp_path = current_dir+f"/{st.session_state.session_id}/content"
+    os.makedirs(temp_path,exist_ok=True)
+    st.session_state.temp_dir = temp_path
+    return temp_path
+def destroy_temp_dir():
+    if "temp_dir" in st.session_state and os.path.exists(st.session_state.temp_dir):
+        shutil.rmtree(st.session_state.temp_dir)
+st.session_state.on_session_end
 def main():
     st.title("Testing Eurus")
-    # st.text(st.secrets['REDDIT_USERNAME'])
-    # st.text(st.secrets["REDDIT_SECRET_KEY"])
-    # st.text(st.secrets["REDDIT_PASSWORD"],)
-    # st.text()
-
-
-    # def create_session_specific_temp_dir():
-    #     # Get the current working directory
-    #     current_cwd = os.getcwd()
-
-    #     # Define the base directory where temporary files will be stored
-    #     base_dir = os.path.join(current_cwd, 'temp_dir')  # Base path is './temp_dir' under the CWD
-
-    #     # Ensure the base directory exists
-    #     os.makedirs(base_dir, exist_ok=True)
-
-    #     # Create a unique temporary directory for this session
-    #     session_temp_dir = tempfile.mkdtemp(dir=base_dir, prefix=f'session_{id(st.session_state)}_')
-        
-    #     # Create a 'content' subdirectory within the session-specific temp directory
-    #     content_dir = os.path.join(session_temp_dir, 'content')
-    #     os.makedirs(content_dir, exist_ok=True)
-
-    #     return content_dir
-
-    # # Check if temp_dir is not already in session state
-    # if 'temp_dir' not in st.session_state:
-    #     # Create a session-specific temporary directory
-    #     st.session_state.temp_dir = create_session_specific_temp_dir()
-
-    # does not have a trailing slash at the end
-    def generate_temp_dir(): 
-        if "session_id" not in st.session_state:
-            st.session_state.session_id = str(uuid.uuid4())
-        st.text(f"Temporary ID: {st.session_state.session_id}")
-        current_dir = os.getcwd()
-        temp_path = current_dir+f"/{st.session_state.session_id}"
-        os.makedirs(temp_path,exist_ok=True)
-        return temp_path
     temp_path = generate_temp_dir()
     # Your RedditRetriever setup
-    reddit_retriever = RedditRetriever(
-        username=st.secrets["REDDIT_USERNAME"],
-        secret_key=st.secrets["REDDIT_SECRET_KEY"],
-        password=st.secrets["REDDIT_PASSWORD"],
-        client_id=st.secrets["REDDIT_CLIENT_ID"],
-        output_directory=temp_path,
-    )
-    stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
+    # reddit_retriever = RedditRetriever(
+    #     username=st.secrets["REDDIT_USERNAME"],
+    #     secret_key=st.secrets["REDDIT_SECRET_KEY"],
+    #     password=st.secrets["REDDIT_PASSWORD"],
+    #     client_id=st.secrets["REDDIT_CLIENT_ID"],
+    #     output_directory=temp_path,
+    # )
+    # stackexchange = StackExchangeRetriever(access_token=st.secrets['STACK_EXCHANGE_ACCESS_TOKEN'],secret_key=st.secrets['STACK_EXCHANGE_SECRET_KEY'])
     query = st.text_input("Enter the input", "")
 
-    # mc = Eurus()
+    mc = Eurus(output_directory=temp_path)
     if st.button("Get Data"):
             try:
-                reddit_retriever.get_and_process_data([query])
+                mc.get_extracted_results(query)
                 st.text("Data extracted")
                 for root, dirs, files in os.walk(temp_path):
                     for file in files:
