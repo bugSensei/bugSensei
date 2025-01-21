@@ -6,3 +6,6 @@ llama-index
 tavily-python
 seleniumbase
 webdriver-manager
+fpdf
+snowflake
+snowflake-snowpark-python
