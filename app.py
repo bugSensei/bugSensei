@@ -182,8 +182,15 @@ def main():
     mc = Eurus(output_directory=temp_path)
     if st.button("Get Data"):
             try:
+                gsearch = None
                 mc.get_extracted_results(query)
                 st.text("Data extracted")
+                try:
+                    with open(f"{temp_path}/gsearch.json", "r") as f:
+                        gsearch = json.load(f)
+                    st.json(gsearch)
+                except Exception as e:
+                    st.text("gsearch does not exist")
                 for root, dirs, files in os.walk(temp_path):
                     for file in files:
                         if file.endswith(".json"):
