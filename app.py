@@ -199,24 +199,51 @@ def main():
 
     if st.button("Get Data"):
         try:
+            # Retrieve and process data
             reddit_retriever.get_and_process_data([query])
             st.text("Data Extracted")
-            st.code()
-            for root,_, files in os.walk(st.session_state.temp_dir):
-                for file in files:
-                    if file.endswith(".json"):
-                        file_path = os.path.join(root, file)
 
-                        # Load and display the JSON content
-                        with open(file_path, "r") as f:
-                            try:
-                                json_content = json.load(f)
-                                st.subheader(f"Content of {file}:")
-                                st.json(json_content)
-                            except json.JSONDecodeError:
-                                st.error(f"Error decoding JSON in {file}")
+            # Debug: Print the temp directory path
+            st.write(f"Temp Directory: {st.session_state.temp_dir}")
+
+            # List all files in the directory
+            try:
+                files_in_dir = os.listdir(st.session_state.temp_dir)
+                st.write("Files in directory:", files_in_dir)
+            except Exception as list_error:
+                st.error(f"Error listing directory contents: {list_error}")
+
+            # Recursive file search with debugging
+            json_files_found = []
+            try:
+                for root, _, files in os.walk(st.session_state.temp_dir):
+                    for file in files:
+                        if file.endswith(".json"):
+                            file_path = os.path.join(root, file)
+                            json_files_found.append(file_path)
+                            
+                            # Debug: Print each JSON file path
+                            st.write(f"Found JSON file: {file_path}")
+
+                # If no JSON files found
+                if not json_files_found:
+                    st.warning("No JSON files found in the directory")
+
+                # Read and display JSON files
+                for file_path in json_files_found:
+                    try:
+                        with open(file_path, "r", encoding='utf-8') as f:
+                            json_content = json.load(f)
+                            st.subheader(f"Content of {os.path.basename(file_path)}:")
+                            st.json(json_content)
+                    except Exception as file_read_error:
+                        st.error(f"Error reading {file_path}: {file_read_error}")
+
+            except Exception as walk_error:
+                st.error(f"Error walking through directory: {walk_error}")
+
         except Exception as e:
-            st.text(e)
+            st.error(f"An error occurred: {e}")
 
 
 main()
