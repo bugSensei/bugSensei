@@ -25,7 +25,7 @@ class RedditRetriever:
 
             # checking whether the specified directory exists
             if not os.path.exists(self.output_directory):
-                os.mkdir(self.output_directory)
+                os.makedirs(self.output_directory,exist_ok=True)
 
             # getting the headers; this is the one to be used while making requests to Reddit
             # route the requests via oauth, use self.base_url
