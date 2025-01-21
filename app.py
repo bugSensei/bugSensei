@@ -207,7 +207,7 @@ def main():
             st.write(f"Temp Directory: {st.session_state.temp_dir}")
 
             # Check if the content directory exists
-            content_dir = os.path.join(st.session_state.temp_dir, 'content')
+            content_dir = os.path.join(st.session_state.temp_dir, 'reddit')
             if not os.path.exists(content_dir):
                 st.warning(f"Content directory does not exist: {content_dir}")
                 return
