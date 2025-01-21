@@ -327,7 +327,7 @@ class Snowflake:
             self.cursor.execute("DROP TABLE IF EXISTS temp_text_files;")
             print("Temporary table dropped.")
 
-    def get_user_friendly_documents(self, doc):
+    def get_user_friendly_responses(self, doc):
         prompt = f"""
             Based on the context: {doc}, create a clear, step-by-step guide for non-technical users. Break down the process into manageable steps.
 
