@@ -40,7 +40,7 @@ def rank_documents(snowflake, query,summarize_folder_path, temp_path):
         with open(f"{reranked_file_path}/reranked_{i}.txt", "w") as f:
             f.write(text)
 
-    return reranked_file_path
+    return reranked_file_path, texts
 
 def get_powershell_code(snowflake, query):
     return snowflake.get_powershell_code(query)
