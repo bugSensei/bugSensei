@@ -5,14 +5,12 @@ from utils.snowflake_agent import Snowflake
 
 from utils import eurus
 # unsummarized files under /content/output/summarize -- refer utils/snowflake_agent.py
-def web_search(snowflake, search_query):
+def web_search(snowflake, search_query,eurus,temp_path):
     try:
-        wt = eurus.Eurus()
-        wt.get_extracted_results(search_query)   
+        eurus.get_extracted_results(search_query)   
     except Exception as e:
         print("Web Extraction Failed !",e)
-
-    snowflake.summarise()
+    snowflake.summarise(temp_path + "/")
 
 def snowflake_retrieval(snowflake, search_query):
     snowflake.get_answer_from_rag(search_query)
